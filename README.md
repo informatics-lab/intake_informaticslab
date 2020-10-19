@@ -1,9 +1,9 @@
-# python-conda-package-template
+# Met Office datasets intake driver and catalogue
 
 ...
 
 
-# Building your package
+# Building the package
 
 ## PyPI
 
@@ -19,7 +19,7 @@ conda build --python {PYTHON_VERSION} meta.yaml
 
 # Uploading your package
 
-## PyPI
+## PyPI 
 
 ```shell
 # ensure `twine` is install
@@ -30,6 +30,11 @@ twine upload dist/*
 ```
 
 ## Anaconda
+
+```shell
+conda build .
+```
+
 
 ```shell
 # ensure conda-build and anaconda-client are installed

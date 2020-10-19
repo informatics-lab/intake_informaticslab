@@ -30,7 +30,7 @@ setup(
     ],
     packages=find_packages(),
     install_requires=["numpy>=1.11"],
-    entry_points={"console_scripts": ["CLINAME=mogreps_uk_dataset._cli:main"]},
+    # entry_points={"console_scripts": ["CLINAME=mogreps_uk_dataset._cli:main"]},
     zip_safe=True,
     long_description=long_description,
     long_description_content_type="text/markdown",
