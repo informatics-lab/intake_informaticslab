@@ -7,7 +7,7 @@ del get_versions
 
 
 
-from .datasources.mogreps_uk import MogrepsUkDataSource  # ensure this import is last and after __version__
+from .datasources.mogreps_uk import MogrepsUkDataSource
 import os
 # fmt: on
 # autopep8: on

@@ -14,7 +14,7 @@ python setup.py install
 ## Anaconda
 
 ```shell
-conda build -c conda-forge .
+conda-build --user informaticslab -c conda-forge .
 ```
 
 # Uploading your package

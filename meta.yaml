@@ -7,7 +7,7 @@ package:
   version: "{{ version }}"
 
 source:
-  git_url: https://github.com/informatics-lab/mogreps_uk_dataset.git
+  path: .
 
 build:
   number: 0
@@ -39,11 +39,15 @@ requirements:
     - 'intake'
 
 test:
-  imports:
-    - mogreps_uk_dataset
+  files:
+    - "*"
+  requires: 
+    - pytest
+  commands:
+    - pytest
 
 about:
-  home: HOMEPAGE
+  home: https://github.com/informatics-lab/mogreps_uk_dataset
   license: GPLv3
   license_family: GPL3
   license_file: LICENSE
@@ -51,4 +55,4 @@ about:
 
 extra:
   recipe-maintainers:
-    - USERNAME
+    - theo.mccaie
