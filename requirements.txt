@@ -1,0 +1,8 @@
+intake
+xarray
+conda-build
+fsspec
+adlfs
+h5netcdf
+zarr
+matplotlib

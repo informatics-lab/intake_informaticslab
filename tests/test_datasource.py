@@ -19,7 +19,7 @@ def test_get_some_data():
     assert isinstance(data, xr.Dataset) == True
 
 
-def test_load():
-    from mogreps_uk_dataset.datasources.mogreps_uk import _load_mogreps_uk_dataset
-    ds = _load_mogreps_uk_dataset()
-    print(ds)
+# def test_load():
+#     from mogreps_uk_dataset.datasources.mogreps_uk import _load_mogreps_uk_dataset
+#     ds = _load_mogreps_uk_dataset()
+#     print(ds)

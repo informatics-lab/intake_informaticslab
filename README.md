@@ -14,7 +14,7 @@ python setup.py install
 ## Anaconda
 
 ```shell
-conda build --python {PYTHON_VERSION} meta.yaml
+conda build -c conda-forge .
 ```
 
 # Uploading your package

@@ -38,7 +38,8 @@ class MogrepsUkDataSource(intake.source.base.DataSource):
 
     def read(self):
         self._load_metadata()
-        return _load_mogreps_uk_dataset()
+        return xr.Dataset()  # Something that does something to go here!
+        # return _load_mogreps_uk_dataset()
 
     def _close(self):
         # close any files, sockets, etc

@@ -5,10 +5,7 @@ from io import BytesIO
 import fsspec
 import xarray as xr
 
-BLOB_ACCOUNT_NAME = os.environ["BLOB_ACCOUNT_NAME"]
-BLOB_ACCOUNT_URL = f"https://{BLOB_ACCOUNT_NAME}.blob.core.windows.net"
-FCST_BLOB_CONTAINER_NAME = os.environ["FCST_BLOB_CONTAINER_NAME"]
-FCST_BLOB_CREDENTIAL = os.environ["FCST_BLOB_CREDENTIAL"]
+from mogreps_uk_dataset.conn import BLOB_ACCOUNT_NAME, BLOB_ACCOUNT_URL, FCST_BLOB_CONTAINER_NAME, FCST_BLOB_CREDENTIAL
 
 # the data that are available in the blob container
 FCST_KNOWN_MODELS = [

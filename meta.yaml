@@ -1,5 +1,6 @@
-{% set name = "mogreps_uk_dataset" %}
-{% set version = "0.0.1" %}
+{% set data = load_setup_py_data() %}
+{% set name = data.get('name') %}
+{% set version = data.get('version') %}
 
 package:
   name: "{{ name|lower }}"
@@ -13,11 +14,29 @@ build:
   script: "$PYTHON -m pip install . --no-deps --ignore-installed -vv "
 
 requirements:
+  build:
+    - pytest
+    - "numpy>=1.11"
+    - 'dask>=1.0'
+    - 'xarray'
+    - 'zarr>=2'
+    - 'adlfs'
+    - 'h5netcdf>=0.8'
+    - 'adlfs'
+    - 'intake'
   host:
     - python
     - pip
   run:
     - python
+    - "numpy>=1.11"
+    - 'dask>=1.0'
+    - 'xarray'
+    - 'zarr>=2'
+    - 'adlfs'
+    - 'h5netcdf>=0.8'
+    - 'adlfs'
+    - 'intake'
 
 test:
   imports:

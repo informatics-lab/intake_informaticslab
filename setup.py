@@ -1,3 +1,4 @@
+import versioneer
 from setuptools import setup, find_packages
 from os import path
 
@@ -5,14 +6,11 @@ this_dir = path.abspath(path.dirname(__file__))
 with open(path.join(this_dir, "README.md")) as f:
     long_description = f.read()
 
-__version__ = "Undefined"
-for line in open(path.join("mogreps_uk_dataset", "__init__.py")):
-    if line.startswith("__version__"):
-        exec(line.strip())
 
 setup(
     name="mogreps_uk_dataset",
-    version=__version__,
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
     description="DESCRIPTION",
     url="https://github.com/informatics-lab/mogreps_uk_dataset",
     author="Theo McCaie",
@@ -29,8 +27,14 @@ setup(
         "Natural Language :: English",
     ],
     packages=find_packages(),
-    install_requires=["numpy>=1.11"],
-    # entry_points={"console_scripts": ["CLINAME=mogreps_uk_dataset._cli:main"]},
+    install_requires=["numpy>=1.11",
+                      'dask>=1.0',
+                      'xarray',
+                      'zarr>=2',
+                      'adlfs',
+                      'h5netcdf>=0.8',
+                      'adlfs',
+                      'intake'],
     zip_safe=True,
     long_description=long_description,
     long_description_content_type="text/markdown",

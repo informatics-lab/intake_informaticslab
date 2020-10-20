@@ -1,0 +1,2 @@
+include versioneer.py
+include mogreps_uk_dataset/_version.py
