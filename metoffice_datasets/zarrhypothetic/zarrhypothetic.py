@@ -8,22 +8,25 @@ import numpy as np
 import xarray as xr
 import zarr
 
-FlagsProxy = namedtuple("FlagsProxy", ("c_contiguous",), defaults=(True,))
+FlagsProxy = namedtuple("FlagsProxy", ("c_contiguous",))
+FlagsProxy.__new__.__defaults__ = (True,)
 
 # values would ordinarily be an np array, so would contain dtype,
 # shape etc - we dummy this just to have access to the is_c_contiguous flag
-ValuesProxy = namedtuple("ValuesProxy", ("flags",), defaults=(FlagsProxy(),))
+ValuesProxy = namedtuple("ValuesProxy", ("flags",))
+ValuesProxy.__new__.__defaults__ = (FlagsProxy(),)
 
 # data proxy to access chunksize
-DataProxy = namedtuple("DataProxy", ("chunksize",), defaults=(None,))
+DataProxy = namedtuple("DataProxy", ("chunksize",))
+DataProxy.__new__.__defaults__ = (None,)
 
 # constructor signature not the same, but gives access to the attributes
 # that we need
 VariableProxy = namedtuple(
     "VariableProxy",
-    ("dims", "shape", "dtype", "values", "data", "attrs"),
-    defaults=(ValuesProxy(), DataProxy(), {}),
+    ("dims", "shape", "dtype", "values", "data", "attrs")
 )
+VariableProxy.__new__.__defaults__ = (ValuesProxy(), DataProxy(), {})
 
 
 class HypotheticZarrStore(MutableMapping):
