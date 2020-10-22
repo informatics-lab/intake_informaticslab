@@ -1,4 +1,4 @@
 include versioneer.py
-include mogreps_uk_dataset/_version.py
-include mogreps_uk_dataset/*.yaml
+include met_office_datasets/_version.py
+include met_office_datasets/*.yaml
 

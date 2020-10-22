@@ -43,7 +43,7 @@ def get_config():
     cfg.style = "pep440"
     cfg.tag_prefix = "None"
     cfg.parentdir_prefix = "None"
-    cfg.versionfile_source = "mogreps_uk_dataset/_version.py"
+    cfg.versionfile_source = "met_office_datasets/_version.py"
     cfg.verbose = False
     return cfg
 

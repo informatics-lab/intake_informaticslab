@@ -1,70 +1,22 @@
 # Met Office datasets intake driver and catalogue
 
-...
 
+## Installing
 
-# Building the package
-
-## PyPI
+### PyPI
 
 ```shell
-python setup.py install
+pip install met_office_datasets
 ```
 
-## Anaconda
+### Anaconda
 
 ```shell
-conda-build --user informaticslab -c conda-forge .
-```
-
-# Uploading your package
-
-## PyPI 
-
-```shell
-# ensure `twine` is install
-pip install twine
-# package source code
-python setup.py sdist
-twine upload dist/*
-```
-
-## Anaconda
-
-```shell
-conda build .
+conda install -c conda-forge -c informaticslab met_office_datasets
 ```
 
 
-```shell
-# ensure conda-build and anaconda-client are installed
-conda install conda-build anaconda-client
-# build package for a specific python version
-conda build --python {PYTHON_VERSION} meta.yaml
-# upload to Anaconda Cloud
-cd $HOME/miniconda3/conda-bld/
-anaconda upload */mogreps_uk_dataset-VERSION_*.tar.bz2
-```
-
-# Installing your package
-
-After uploading to your repository of interest, you should be able to download and install your package according to the tools for that repository.
-
-## PyPI
-
-```shell
-pip install mogreps_uk_dataset
-```
-
-## Anaconda
-
-```shell
-conda install mogreps_uk_dataset
-```
-
-
-
-So tips building conda stuff. I said it took ages to build the env and didn't wat to keep doing that for testing the build. Answers:
+<!-- So tips building conda stuff. I said it took ages to build the env and didn't wat to keep doing that for testing the build. Answers:
 ```
 
 Wolf Vollprecht @wolfv 15:08
@@ -75,4 +27,4 @@ otherwise you might want to try conda mambabuild ... which is included in boa to
 
 
 Otherwise, you might want to try to use conda debug instead of conda build in the first place. This only creates the environment setup but doesn't start the build.
-```
+``` -->
