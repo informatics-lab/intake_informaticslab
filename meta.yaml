@@ -48,7 +48,7 @@ test:
     - pytest
 
 about:
-  home: https://github.com/informatics-lab/mogreps_uk_dataset
+  home: https://github.com/informatics-lab/metoffice_datasets
   license: GPLv3
   license_family: GPL3
   license_file: LICENSE

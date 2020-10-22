@@ -6,14 +6,14 @@ this_dir = path.abspath(path.dirname(__file__))
 with open(path.join(this_dir, "README.md")) as f:
     long_description = f.read()
 
-NAME = "mogreps_uk_dataset"
+NAME = "metoffice_datasets"
 
 setup(
     name=NAME,
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     description="DESCRIPTION",
-    url="https://github.com/informatics-lab/mogreps_uk_dataset",
+    url="https://github.com/informatics-lab/metoffice_datasets",
     author="Theo McCaie",
     author_email="theo.mccaie@informaticslab.co.uk",
     classifiers=[
