@@ -48,7 +48,7 @@ test:
     - pytest
 
 about:
-  home: https://github.com/informatics-lab/metoffice_datasets
+  home: https://github.com/informatics-lab/met_office_datasets
   license: GPLv3
   license_family: GPL3
   license_file: LICENSE

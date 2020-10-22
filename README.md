@@ -6,13 +6,13 @@
 ### PyPI
 
 ```shell
-pip install metoffice_datasets
+pip install met_office_datasets
 ```
 
 ### Anaconda
 
 ```shell
-conda install -c conda-forge -c informaticslab metoffice_datasets
+conda install -c conda-forge -c informaticslab met_office_datasets
 ```
 
 

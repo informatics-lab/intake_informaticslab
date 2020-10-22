@@ -1,4 +1,4 @@
 include versioneer.py
-include metoffice_datasets/_version.py
-include metoffice_datasets/*.yaml
+include met_office_datasets/_version.py
+include met_office_datasets/*.yaml
 

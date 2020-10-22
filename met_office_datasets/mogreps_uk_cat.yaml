@@ -4,5 +4,5 @@ metadata:
 sources:
   mogreps_uk:
     description: Met OFfice MOGREPS UK dataset
-    driver: metoffice_datasets.datasources.mogreps_uk.MogrepsUkDataSource
+    driver: met_office_datasets.datasources.mogreps_uk.MogrepsUkDataSource
     args: {}

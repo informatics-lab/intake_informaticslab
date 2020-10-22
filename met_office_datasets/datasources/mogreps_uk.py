@@ -1,9 +1,9 @@
 import intake
 
-from metoffice_datasets import __version__
-from metoffice_datasets.conn import (BLOB_ACCOUNT_NAME, BLOB_CONTAINER_NAME,
-                                     BLOB_CREDENTIAL)
-from metoffice_datasets.datasources.dataset import MODataset
+from met_office_datasets import __version__
+from met_office_datasets.conn import (BLOB_ACCOUNT_NAME, BLOB_CONTAINER_NAME,
+                                      BLOB_CREDENTIAL)
+from met_office_datasets.datasources.dataset import MODataset
 
 
 class MogrepsUkDataSource(intake.source.base.DataSource):
