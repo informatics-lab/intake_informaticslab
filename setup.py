@@ -6,9 +6,10 @@ this_dir = path.abspath(path.dirname(__file__))
 with open(path.join(this_dir, "README.md")) as f:
     long_description = f.read()
 
+NAME = "mogreps_uk_dataset"
 
 setup(
-    name="mogreps_uk_dataset",
+    name=NAME,
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     description="DESCRIPTION",
@@ -34,8 +35,15 @@ setup(
                       'adlfs',
                       'h5netcdf>=0.8',
                       'adlfs',
-                      'intake'],
+                      'intake',
+                      'toolz'],
     zip_safe=True,
     long_description=long_description,
     long_description_content_type="text/markdown",
+    include_package_data=True,
+    entry_points={
+        'intake.catalogs': [
+            f'met_office= {NAME}:cat'
+        ]
+    }
 )

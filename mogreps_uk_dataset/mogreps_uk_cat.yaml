@@ -1,0 +1,8 @@
+metadata:
+  version: 1
+
+sources:
+  mogreps_uk:
+    description: Met OFfice MOGREPS UK dataset
+    driver: mogreps_uk_dataset.datasources.mogreps_uk.MogrepsUkDataSource
+    args: {}
