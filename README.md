@@ -8,7 +8,12 @@
 ## PyPI
 
 ```shell
-python setup.py install
+#user=informaticslab
+python3 setup.py sdist bdist_wheel
+python3 -m twine upload -u informaticslab --repository testpypi dist/*
+
+
+
 ```
 
 ## Anaconda
@@ -28,23 +33,10 @@ pip install twine
 python setup.py sdist
 twine upload dist/*
 ```
-
 ## Anaconda
 
-```shell
-conda build .
-```
 
 
-```shell
-# ensure conda-build and anaconda-client are installed
-conda install conda-build anaconda-client
-# build package for a specific python version
-conda build --python {PYTHON_VERSION} meta.yaml
-# upload to Anaconda Cloud
-cd $HOME/miniconda3/conda-bld/
-anaconda upload */mogreps_uk_dataset-VERSION_*.tar.bz2
-```
 
 # Installing your package
 
