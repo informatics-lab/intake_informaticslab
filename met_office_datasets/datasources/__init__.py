@@ -2,6 +2,7 @@ from intake.source.base import Schema
 from intake_xarray.base import DataSourceMixin
 
 from met_office_datasets import __version__
+
 from .dataset import MODataset
 
 
@@ -9,15 +10,17 @@ class MetOfficeDataSource(DataSourceMixin):
     name = "met_office"
     version = __version__
 
-    def __init__(self,
-                 start_cycle,
-                 end_cycle,
-                 cycle_frequency,
-                 forecast_extent,
-                 model,
-                 diagnostics,
-                 storage_options,
-                 metadata=None):
+    def __init__(
+        self,
+        start_cycle,
+        end_cycle,
+        cycle_frequency,
+        forecast_extent,
+        model,
+        diagnostics,
+        storage_options,
+        metadata=None,
+    ):
         super().__init__(metadata=metadata)
         self.start_cycle = start_cycle
         self.end_cycle = end_cycle
@@ -48,9 +51,9 @@ class MetOfficeDataSource(DataSourceMixin):
 
             # assume rectangular data (shared coords across all data vars)
             metadata = {
-                'dims': dict(self._ds.dims),
-                'data_vars': self.diagnostics,
-                'coords': tuple(self._ds.coords.keys())
+                "dims": dict(self._ds.dims),
+                "data_vars": self.diagnostics,
+                "coords": tuple(self._ds.coords.keys()),
             }
             metadata.update(self._ds.attrs)
             self._schema = Schema(
@@ -58,6 +61,6 @@ class MetOfficeDataSource(DataSourceMixin):
                 dtype=None,
                 shape=None,
                 npartitions=None,
-                extra_metadata=metadata
+                extra_metadata=metadata,
             )
         return self._schema

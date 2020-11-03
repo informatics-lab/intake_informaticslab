@@ -6,8 +6,11 @@ import pandas as pd
 import xarray as xr
 
 from ..zarrhypothetic.zarrhypothetic import HypotheticZarrStore
-from .utils import (calc_cycle_validity_lead_times, datetime_to_iso_str,
-                    timedelta_to_duration_str)
+from .utils import (
+    calc_cycle_validity_lead_times,
+    datetime_to_iso_str,
+    timedelta_to_duration_str,
+)
 
 
 # TODO: remove hardcoded assumptions about MOGREPS-UK

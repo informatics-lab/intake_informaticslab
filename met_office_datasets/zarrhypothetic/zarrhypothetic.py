@@ -23,8 +23,7 @@ DataProxy.__new__.__defaults__ = (None,)
 # constructor signature not the same, but gives access to the attributes
 # that we need
 VariableProxy = namedtuple(
-    "VariableProxy",
-    ("dims", "shape", "dtype", "values", "data", "attrs")
+    "VariableProxy", ("dims", "shape", "dtype", "values", "data", "attrs")
 )
 VariableProxy.__new__.__defaults__ = (ValuesProxy(), DataProxy(), {})
 
