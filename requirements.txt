@@ -1,5 +1,6 @@
 intake
 xarray
+intake-xarray
 conda-build
 fsspec
 adlfs

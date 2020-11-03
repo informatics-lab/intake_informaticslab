@@ -3,6 +3,42 @@ metadata:
 
 sources:
   mogreps_uk:
-    description: Met OFfice MOGREPS UK dataset
-    driver: met_office_datasets.datasources.mogreps_uk.MogrepsUkDataSource
-    args: {}
+    description: Met Office MOGREPS-UK dataset
+    driver: met_office_datasets.datasources.MetOfficeDataSource
+    args:
+      start_cycle: "20201018T0800Z"
+      end_cycle: "20201020T1200Z"
+      cycle_frequency: "1H"
+      forecast_extent: "126H"
+      model: "mo-atmospheric-mogreps-uk"
+      diagnostics: [
+        "cloud_amount_of_low_cloud",
+        "cloud_amount_of_medium_cloud",
+        "cloud_amount_of_total_cloud",
+        "fog_fraction_at_screen_level",
+        "height_ASL_at_freezing_level",
+        "radiation_flux_in_longwave_downward_at_surface",
+        "radiation_flux_in_shortwave_diffuse_downward_at_surface",
+        "radiation_flux_in_shortwave_direct_downward_at_surface",
+        "radiation_flux_in_shortwave_total_downward_at_surface",
+        "relative_humidity_at_screen_level",
+        "sensible_heat_flux_at_surface",
+        "snow_depth_water_equivalent",
+        "temperature_at_screen_level",
+        "temperature_at_surface",
+        "visibility_at_screen_level",
+        "wind_direction_at_10m",
+        "wind_speed_at_10m",
+        "hail_fall_accumulation-PT01H",
+        "lightning_flash_accumulation-PT01H",
+        "rainfall_accumulation-PT01H",
+        "snowfall_accumulation-PT01H",
+        "temperature_at_screen_level_max-PT01H",
+        "temperature_at_screen_level_min-PT01H",
+        "wind_speed_at_10m_max-PT01H",
+      ]
+      storage_options:
+        data_protocol: "abfs"
+        url_prefix: "metdatasa"
+        account_name: "met-office-models-ncdf"
+        credential: "?si=intake-driver&sv=2019-12-12&sr=c&sig=7HlHkSnORP2k2dl6ohVmPMkfkuwq9m7RhDvLmcwwgVo%3D"

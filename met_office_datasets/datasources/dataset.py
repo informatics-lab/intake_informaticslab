@@ -10,63 +10,38 @@ from .utils import (calc_cycle_validity_lead_times, datetime_to_iso_str,
                     timedelta_to_duration_str)
 
 
+# TODO: remove hardcoded assumptions about MOGREPS-UK
 class MODataset:
-    DEFAULT_DIAGNOSTICS = [
-        "cloud_amount_of_low_cloud",
-        "cloud_amount_of_medium_cloud",
-        "cloud_amount_of_total_cloud",
-        "fog_fraction_at_screen_level",
-        "height_ASL_at_freezing_level",
-        "radiation_flux_in_longwave_downward_at_surface",
-        "radiation_flux_in_shortwave_diffuse_downward_at_surface",
-        "radiation_flux_in_shortwave_direct_downward_at_surface",
-        "radiation_flux_in_shortwave_total_downward_at_surface",
-        "relative_humidity_at_screen_level",
-        "sensible_heat_flux_at_surface",
-        "snow_depth_water_equivalent",
-        "temperature_at_screen_level",
-        "temperature_at_surface",
-        "visibility_at_screen_level",
-        "wind_direction_at_10m",
-        "wind_speed_at_10m",
-        "hail_fall_accumulation-PT01H",
-        "lightning_flash_accumulation-PT01H",
-        "rainfall_accumulation-PT01H",
-        "snowfall_accumulation-PT01H",
-        "temperature_at_screen_level_max-PT01H",
-        "temperature_at_screen_level_min-PT01H",
-        "wind_speed_at_10m_max-PT01H",
-    ]
-
     def __init__(
         self,
         start_cycle,
         end_cycle,
+        model,
+        diagnostics,
         cycle_freq="1H",
         start_lead_time="0H",
         end_lead_time="126H",
         lead_time_freq="1H",
-        model="mo-atmospheric-mogreps-uk",
-        diagnostics=None,
         **storage_options,
     ):
         """
-        NB: If using abfs (default), storage_options should contain the keys
+        storage_options must contain the keys data_protocol and url_prefix
+
+        NB: If using abfs, storage_options should contain the keys
         'account_name' and 'credential'
         """
 
         self.start_cycle = start_cycle
         self.end_cycle = end_cycle
+        self.model = model
+        self.diagnostics = diagnostics
         self.cycle_freq = cycle_freq
         self.start_lead_time = start_lead_time
         self.end_lead_time = end_lead_time
         self.lead_time_freq = lead_time_freq
-        self.model = model
-        if diagnostics is None:
-            self.diagnostics = MODataset.DEFAULT_DIAGNOSTICS
 
-        self.data_protocol = storage_options.pop("data_protocol", "abfs")
-        self.url_prefix = storage_options.pop("url_prefix", "level1")
+        self.data_protocol = storage_options.pop("data_protocol")
+        self.url_prefix = storage_options.pop("url_prefix")
         self.storage_options = storage_options
         self._validate_storage_options()
 
