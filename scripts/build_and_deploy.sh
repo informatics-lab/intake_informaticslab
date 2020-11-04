@@ -1,8 +1,12 @@
 #! /usr/bin/env bash
 
+set -ex
+
+
 HERE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 DIS_DIR=${HERE_DIR}/../dist
 
+rm $DIS_DIR/*
 
 
 
