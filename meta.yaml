@@ -17,32 +17,34 @@ build:
 requirements:
   build:
     - pytest
-    - "numpy>=1.11"
-    - 'dask>=1.0'
-    - 'xarray'
-    - 'zarr>=2'
-    - 'adlfs'
-    - 'h5netcdf>=0.8'
-    - 'adlfs'
-    - 'intake'
+    - numpy>=1.11
+    - dask>=1.0
+    - xarray
+    - zarr>=2
+    - adlfs
+    - h5netcdf>=0.8
+    - adlfs
+    - intake
+    - intake-xarray
   host:
     - python
     - pip
   run:
     - python
-    - "numpy>=1.11"
-    - 'dask>=1.0'
-    - 'xarray'
-    - 'zarr>=2'
-    - 'adlfs'
-    - 'h5netcdf>=0.8'
-    - 'adlfs'
-    - 'intake'
+    - numpy>=1.11
+    - dask>=1.0
+    - xarray
+    - zarr>=2
+    - adlfs
+    - h5netcdf>=0.8
+    - adlfs
+    - intake
+    - intake-xarray
 
 test:
   files:
     - "*"
-  requires: 
+  requires:
     - pytest
   commands:
     - pytest

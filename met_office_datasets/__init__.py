@@ -9,9 +9,10 @@ del get_versions
 
 import os
 
-from .datasources.mogreps_uk import MogrepsUkDataSource
-
 import intake
+
+from .datasources import MetOfficeDataSource
+
 cat = intake.open_catalog(os.path.join(os.path.dirname(__file__), 'mogreps_uk_cat.yaml'))
 # fmt: on
 # autopep8: on

@@ -36,6 +36,7 @@ setup(
                       'h5netcdf>=0.8',
                       'adlfs',
                       'intake',
+                      'intake-xarray',
                       'toolz'],
     zip_safe=True,
     long_description=long_description,
