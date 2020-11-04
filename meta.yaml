@@ -26,7 +26,6 @@ requirements:
     - h5netcdf>=0.8
     - adlfs
     - intake
-    - intake-xarray
   host:
     - python
     - pip
@@ -41,8 +40,6 @@ requirements:
     - h5netcdf>=0.8
     - adlfs
     - intake
-    - intake-xarray
-
 test:
   files:
     - "*"
