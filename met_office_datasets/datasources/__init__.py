@@ -1,9 +1,13 @@
+import datetime
+
 from intake.source.base import Schema
 from intake_xarray.base import DataSourceMixin
-
 from met_office_datasets import __version__
 
 from .dataset import MODataset
+from .utils import datetime_to_iso_str
+
+DATA_DELAY = 24  # num hours from current time that data is available
 
 
 class MetOfficeDataSource(DataSourceMixin):
@@ -22,6 +26,12 @@ class MetOfficeDataSource(DataSourceMixin):
         metadata=None,
     ):
         super().__init__(metadata=metadata)
+        if end_cycle.lower() == "latest":
+            end_cycle = datetime.datetime.utcnow() - datetime.timedelta(
+                hours=DATA_DELAY
+            )
+            end_cycle = datetime_to_iso_str(end_cycle)
+
         self.start_cycle = start_cycle
         self.end_cycle = end_cycle
         self.cycle_frequency = cycle_frequency
