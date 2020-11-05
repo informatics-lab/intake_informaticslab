@@ -6,8 +6,8 @@ sources:
     description: Met Office MOGREPS-UK dataset
     driver: met_office_datasets.datasources.MetOfficeDataSource
     args:
-      start_cycle: "20201018T0800Z"
-      end_cycle: "20201020T1200Z"
+      start_cycle: "{{ start_cycle }}"
+      end_cycle: "{{ end_cycle }}"
       cycle_frequency: "1H"
       forecast_extent: "126H"
       model: "mo-atmospheric-mogreps-uk"
@@ -42,3 +42,12 @@ sources:
         url_prefix: "metdatasa"
         account_name: "met-office-models-ncdf"
         credential: "?si=intake-driver&sv=2019-12-12&sr=c&sig=7HlHkSnORP2k2dl6ohVmPMkfkuwq9m7RhDvLmcwwgVo%3D"
+    parameters:
+      start_cycle:
+        description: The start time of the oldest model run
+        type: str
+        default: "20201018T0800Z"
+      end_cycle:
+        description: The start time of the most recent model run
+        type: str
+        default: "20201020T1200Z"
