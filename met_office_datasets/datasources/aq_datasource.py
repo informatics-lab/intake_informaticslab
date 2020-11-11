@@ -4,19 +4,73 @@ import numpy as np
 import pandas as pd
 from .utils import datetime_to_iso_str
 from io import BytesIO
+import datetime
+from met_office_datasets import __version__
+from met_office_datasets.datasources import MetOfficeDataSource
+
+
+class MetOfficeAQDataSource(MetOfficeDataSource):
+    name = "met_office_aq"
+    version = __version__
+
+    def __init__(self,
+                 start_cycle,
+                 end_cycle,
+                 cycle_frequency,
+                 model,
+                 diagnostics,
+                 storage_options,
+                 aggregation=None,
+                 metadata=None
+                 ):
+
+        if end_cycle.lower() == 'latest':
+            end_cycle = datetime_to_iso_str((datetime.datetime.now() - datetime.timedelta(hours=48)))
+
+        self.aggregation = aggregation
+
+        super().__init__(
+            start_cycle=start_cycle,
+            end_cycle=end_cycle,
+            cycle_frequency=cycle_frequency,
+            forecast_extent=None,
+            model=model,
+            diagnostics=diagnostics,
+            storage_options=storage_options,
+            metadata=metadata
+        )
+
+    def _open_dataset(self):
+        self._ds = AQDataset(
+            start_cycle=self.start_cycle,
+            end_cycle=self.end_cycle,
+            model=self.model,
+            diagnostics=self.diagnostics,
+            cycle_frequency=self.cycle_frequency,
+            storage_options=self.storage_options,
+            aggregation=self.aggregation
+        ).ds
 
 
 class AQDataset(MODataset):
 
-    def __init__(self, storage_options):
+    def __init__(
+        self,
+        start_cycle,
+        end_cycle,
+        diagnostics,
+        model,
+        cycle_frequency,
+        storage_options,
+        aggregation=None
+    ):
 
-        start_cycle = "20200101T0000Z"
-        end_cycle = "20200105T0000Z"
-        model = 'aqum_hourly'
-        diagnostics = ['o3']
-        super().__init__(start_cycle, end_cycle, model, diagnostics, cycle_freq='1H', start_lead_time=None, end_lead_time="126H", lead_time_freq="None",  **storage_options)
+        super().__init__(start_cycle, end_cycle, model, diagnostics,
+                         cycle_freq=cycle_frequency, start_lead_time=None, end_lead_time=None,
+                         lead_time_freq=None, **storage_options)
+        self.aggregation = aggregation
 
-    @property
+    @ property
     def chunks(self):
         static_coords = self.static_coords
         chunks = {name: static_coords[name].shape[0] for name in static_coords.keys()}
@@ -31,7 +85,7 @@ class AQDataset(MODataset):
         chunks.update({'time': time_chunks})
         return chunks
 
-    @property
+    @ property
     def dynamic_coords(self):
         dynamic_coords_data = {
             "time": pd.date_range(
@@ -43,7 +97,7 @@ class AQDataset(MODataset):
             for name, data in dynamic_coords_data.items()
         }
 
-    @property
+    @ property
     def dims(self):
         return (
             "time",
@@ -51,12 +105,12 @@ class AQDataset(MODataset):
             "projection_x_coordinate",
         )
 
-    @property
+    @ property
     def static_coords(self):
         static_coords = self._create_grid_coords()
         return static_coords
 
-    @staticmethod
+    @ staticmethod
     def _create_grid_coords():
         GRID_DEFINITION = {"x": (-238000, 856000, 548), "y": (-184000, 1222000, 704)}
 
@@ -80,16 +134,12 @@ class AQDataset(MODataset):
         self, diagnostic, time=None
     ):
         """Return the URL of a forecast file."""
-        # model and diagnostic are strings
-        # time (datetime.datetime)
 
         # convert all to strings
         time_str = datetime_to_iso_str(time).split('T')[0]
-
-        # 'covid-response-ds/metoffice_aqum_hourly/o3/aqum_hourly_o3_20200101.nc'
-
+        ag_str = f"_{self.aggregation}" if self.aggregation else ""
         obj_path = (
-            f"metoffice_{self.model}/{diagnostic}/{self.model}_{diagnostic}_{time_str}.nc"
+            f"metoffice_{self.model}/{diagnostic}/{self.model}_{diagnostic}{ag_str}_{time_str}.nc"
         )
         obj_path = f"{self.url_prefix}/{obj_path}"
         return f"{self.data_protocol}://{obj_path}"
@@ -100,7 +150,6 @@ class AQDataset(MODataset):
 
         time = pd.to_datetime(np.datetime64(time, "ns"))
 
-        # https://metdatasa.blob.core.windows.net/covid19-response/metoffice_ukv_daily/snow_max/ukv_daily_snow_max_20200101.nc
         url = self._get_blob_url(
             diagnostic=diag, time=time
         )
@@ -113,7 +162,7 @@ class AQDataset(MODataset):
         except FileNotFoundError:
             return None
 
-    @staticmethod
+    @ staticmethod
     def _extract_data_as_dataarray(dataset):
         # coords in all datasets
         REQUIRED_COORD_VARS = [
