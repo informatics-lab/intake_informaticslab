@@ -21,8 +21,10 @@ class MetOfficeDataSource(DataSourceMixin):
         cycle_frequency,
         forecast_extent,
         model,
+        dimensions,
         diagnostics,
         storage_options,
+        static_coords=None,
         metadata=None,
     ):
         super().__init__(metadata=metadata)
@@ -37,8 +39,10 @@ class MetOfficeDataSource(DataSourceMixin):
         self.cycle_frequency = cycle_frequency
         self.forecast_extent = forecast_extent
         self.model = model
+        self.dimensions = dimensions
         self.diagnostics = diagnostics
         self.storage_options = storage_options
+        self.static_coords = static_coords
         self._ds = None
 
     def _open_dataset(self):
@@ -46,11 +50,13 @@ class MetOfficeDataSource(DataSourceMixin):
             start_cycle=self.start_cycle,
             end_cycle=self.end_cycle,
             model=self.model,
+            dims=self.dimensions,
             diagnostics=self.diagnostics,
             cycle_freq=self.cycle_frequency,
             start_lead_time="0H",
             end_lead_time=self.forecast_extent,
             lead_time_freq="1H",
+            static_coords=self.static_coords,
             **self.storage_options
         ).ds
 

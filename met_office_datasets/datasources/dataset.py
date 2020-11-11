@@ -20,11 +20,13 @@ class MODataset:
         start_cycle,
         end_cycle,
         model,
+        dims,
         diagnostics,
         cycle_freq="1H",
         start_lead_time="0H",
         end_lead_time="126H",
         lead_time_freq="1H",
+        static_coords=None,
         **storage_options,
     ):
         """
@@ -34,14 +36,18 @@ class MODataset:
         'account_name' and 'credential'
         """
 
+        self._check_valid_dims(dims, model)
+
         self.start_cycle = start_cycle
         self.end_cycle = end_cycle
         self.model = model
+        self.dims = dims
         self.diagnostics = diagnostics
         self.cycle_freq = cycle_freq
         self.start_lead_time = start_lead_time
         self.end_lead_time = end_lead_time
         self.lead_time_freq = lead_time_freq
+        self._static_coords = static_coords or {}
 
         self.data_protocol = storage_options.pop("data_protocol")
         self.url_prefix = storage_options.pop("url_prefix")
@@ -57,6 +63,19 @@ class MODataset:
 
         self._zstore = self._create_zstore()
         self._ds = None
+
+    @staticmethod
+    def _check_valid_dims(dims, model):
+        expected_dims = [
+            "forecast_reference_time",
+            "forecast_period",
+            "projection_x_coordinate",
+            "projection_y_coordinate",
+        ]
+        if model == "mo-atmospheric-mogreps-uk":
+            expected_dims += ["realization"]
+        if not all(map(lambda edim: edim in dims, expected_dims)):
+            raise ValueError("Expected to find all of f{expected_dims} in dims")
 
     def _validate_storage_options(self):
         ABFS_KEYS = ("account_name", "credential")
@@ -82,16 +101,6 @@ class MODataset:
             msg = f"When using 'abfs', storage_options should contain the keys: {ABFS_KEYS}"
             raise KeyError(msg)
 
-    @property
-    def dims(self):
-        return (
-            "forecast_reference_time",
-            "forecast_period",
-            "realization",
-            "projection_y_coordinate",
-            "projection_x_coordinate",
-        )
-
     @staticmethod
     def _create_grid_coords():
         GRID_DEFINITION = {"x": (-1158000, 924000, 1042), "y": (-1036000, 902000, 970)}
@@ -115,10 +124,10 @@ class MODataset:
     @property
     def static_coords(self):
         static_coords = self._create_grid_coords()
-        NUM_REALIZATIONS = 3
-        static_coords["realization"] = xr.Variable(
-            dims=("realization",), data=np.arange(NUM_REALIZATIONS)
-        )
+        for name, defn in self._static_coords.items():
+            static_coords[name] = xr.Variable(
+                dims=(name,), data=np.array(defn["data"]), attrs=defn.get("attrs")
+            )
         return static_coords
 
     @property
@@ -189,9 +198,7 @@ class MODataset:
         data_var = data_var[0]
         return dataset[data_var]
 
-    def _get_fcst_url(
-        self, diagnostic, cycle_time=None, validity_time=None, lead_time=None
-    ):
+    def _get_url(self, diagnostic, cycle_time=None, validity_time=None, lead_time=None):
         """Return the URL of a forecast file."""
         # model and diagnostic are strings
         # validity_time (datetime.datetime)
@@ -226,9 +233,7 @@ class MODataset:
         ref_time = pd.to_datetime(np.datetime64(ref_time, "ns"))
         fcst_period = pd.to_timedelta(np.timedelta64(fcst_period, "ns"))
 
-        url = self._get_fcst_url(
-            diagnostic=diag, cycle_time=ref_time, lead_time=fcst_period
-        )
+        url = self._get_url(diagnostic=diag, cycle_time=ref_time, lead_time=fcst_period)
 
         try:
             data = self._read_from_url(url)
@@ -257,37 +262,3 @@ class MODataset:
 
     def to_xarray(self):
         return self.ds
-
-    # passthrough magic methods to xarray dataset...
-    def __copy__(self):
-        return self.ds.__copy__()
-
-    def __deepcopy__(self, memo=None):
-        return self.ds.__deepcopy__(memo=memo)
-
-    def __contains__(self, key):
-        return key in self.ds
-
-    def __len__(self):
-        return len(self.ds)
-
-    def __bool__(self):
-        return bool(self.ds)
-
-    def __iter__(self):
-        return iter(self.ds)
-
-    def __getitem__(self, key):
-        return self.ds[key]
-
-    def __setitem__(self, key, value):
-        self.ds[key] = value
-
-    def __delitem__(self, key):
-        del self.ds[key]
-
-    def __repr__(self):
-        return repr(self.ds)
-
-    def _repr_html_(self):
-        return self.ds._repr_html_()
