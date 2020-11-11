@@ -22,11 +22,11 @@ class MODataset:
         model,
         dims,
         diagnostics,
+        static_coords,
         cycle_freq="1H",
         start_lead_time="0H",
         end_lead_time="126H",
         lead_time_freq="1H",
-        static_coords=None,
         **storage_options,
     ):
         """
@@ -36,18 +36,18 @@ class MODataset:
         'account_name' and 'credential'
         """
 
-        self._check_valid_dims(dims, model)
+        self._check_dims_coords(dims, static_coords, model)
 
         self.start_cycle = start_cycle
         self.end_cycle = end_cycle
         self.model = model
         self.dims = dims
         self.diagnostics = diagnostics
+        self._static_coords = static_coords
         self.cycle_freq = cycle_freq
         self.start_lead_time = start_lead_time
         self.end_lead_time = end_lead_time
         self.lead_time_freq = lead_time_freq
-        self._static_coords = static_coords or {}
 
         self.data_protocol = storage_options.pop("data_protocol")
         self.url_prefix = storage_options.pop("url_prefix")
@@ -65,17 +65,29 @@ class MODataset:
         self._ds = None
 
     @staticmethod
-    def _check_valid_dims(dims, model):
-        expected_dims = [
-            "forecast_reference_time",
-            "forecast_period",
+    def _check_dims_coords(dims, static_coords, model):
+        expected_coords = [
             "projection_x_coordinate",
             "projection_y_coordinate",
         ]
         if model == "mo-atmospheric-mogreps-uk":
-            expected_dims += ["realization"]
-        if not all(map(lambda edim: edim in dims, expected_dims)):
-            raise ValueError("Expected to find all of f{expected_dims} in dims")
+            expected_coords += ["realization"]
+
+        expected_dims = [
+            "forecast_reference_time",
+            "forecast_period",
+        ] + expected_coords
+
+        pair_dict = {
+            "static_coords": (expected_coords, list(static_coords.keys())),
+            "dims": (expected_dims, dims),
+        }
+
+        for var_type, pair in pair_dict.items():
+            expected, passed_in = pair
+            # check all of expected were passed in
+            if not all(map(lambda var: var in passed_in, expected)):
+                raise ValueError(f"Expected to find all of {expected} in {var_type}")
 
     def _validate_storage_options(self):
         ABFS_KEYS = ("account_name", "credential")
@@ -101,32 +113,17 @@ class MODataset:
             msg = f"When using 'abfs', storage_options should contain the keys: {ABFS_KEYS}"
             raise KeyError(msg)
 
-    @staticmethod
-    def _create_grid_coords():
-        GRID_DEFINITION = {"x": (-1158000, 924000, 1042), "y": (-1036000, 902000, 970)}
-
-        coords = {}
-        for axis in ("x", "y"):
-            name = f"projection_{axis}_coordinate"
-            minval, maxval, npts = GRID_DEFINITION[axis]
-            data = np.linspace(minval, maxval, npts, endpoint=True)
-            coords[name] = xr.Variable(
-                dims=(name,),
-                data=data,
-                attrs={
-                    "axis": axis,
-                    "units": "m",
-                    "standard_name": name,
-                },
-            )
-        return coords
-
     @property
     def static_coords(self):
-        static_coords = self._create_grid_coords()
+        static_coords = {}
         for name, defn in self._static_coords.items():
+            data = defn["data"]
+            if isinstance(data, dict):
+                data = np.linspace(**data)
+            else:
+                data = np.array(data)
             static_coords[name] = xr.Variable(
-                dims=(name,), data=np.array(defn["data"]), attrs=defn.get("attrs")
+                dims=(name,), data=data, attrs=defn.get("attrs")
             )
         return static_coords
 
