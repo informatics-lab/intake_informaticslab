@@ -45,6 +45,12 @@ sources:
         "wind_speed_at_10m_max-PT01H",
       ]
       static_coords:
+        realization:
+          data: [0, 1, 2]
+          attrs: {
+            "units": "1",
+            "standard_name": "realization"
+          }
         projection_y_coordinate:
           data: {
             "start": -1036000,
@@ -66,12 +72,6 @@ sources:
             "axis": "x",
             "units": "m",
             "standard_name": "projection_x_coordinate"
-          }
-        realization:
-          data: [0, 1, 2]
-          attrs: {
-            "units": "1",
-            "standard_name": "realization"
           }
       storage_options:
         data_protocol: "abfs"
