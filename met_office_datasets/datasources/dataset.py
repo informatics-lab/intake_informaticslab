@@ -20,7 +20,9 @@ class MODataset:
         start_cycle,
         end_cycle,
         model,
+        dims,
         diagnostics,
+        static_coords,
         cycle_freq="1H",
         start_lead_time="0H",
         end_lead_time="126H",
@@ -34,10 +36,14 @@ class MODataset:
         'account_name' and 'credential'
         """
 
+        self._check_dims_coords(dims, static_coords, model)
+
         self.start_cycle = start_cycle
         self.end_cycle = end_cycle
         self.model = model
+        self.dims = dims
         self.diagnostics = diagnostics
+        self._static_coords = static_coords
         self.cycle_freq = cycle_freq
         self.start_lead_time = start_lead_time
         self.end_lead_time = end_lead_time
@@ -57,6 +63,31 @@ class MODataset:
 
         self._zstore = self._create_zstore()
         self._ds = None
+
+    @staticmethod
+    def _check_dims_coords(dims, static_coords, model):
+        expected_coords = [
+            "projection_x_coordinate",
+            "projection_y_coordinate",
+        ]
+        if model == "mo-atmospheric-mogreps-uk":
+            expected_coords += ["realization"]
+
+        expected_dims = [
+            "forecast_reference_time",
+            "forecast_period",
+        ] + expected_coords
+
+        pair_dict = {
+            "static_coords": (expected_coords, list(static_coords.keys())),
+            "dims": (expected_dims, dims),
+        }
+
+        for var_type, pair in pair_dict.items():
+            expected, passed_in = pair
+            # check all of expected were passed in
+            if not all(map(lambda var: var in passed_in, expected)):
+                raise ValueError(f"Expected to find all of {expected} in {var_type}")
 
     def _validate_storage_options(self):
         ABFS_KEYS = ("account_name", "credential")
@@ -83,42 +114,17 @@ class MODataset:
             raise KeyError(msg)
 
     @property
-    def dims(self):
-        return (
-            "forecast_reference_time",
-            "forecast_period",
-            "realization",
-            "projection_y_coordinate",
-            "projection_x_coordinate",
-        )
-
-    @staticmethod
-    def _create_grid_coords():
-        GRID_DEFINITION = {"x": (-1158000, 924000, 1042), "y": (-1036000, 902000, 970)}
-
-        coords = {}
-        for axis in ("x", "y"):
-            name = f"projection_{axis}_coordinate"
-            minval, maxval, npts = GRID_DEFINITION[axis]
-            data = np.linspace(minval, maxval, npts, endpoint=True)
-            coords[name] = xr.Variable(
-                dims=(name,),
-                data=data,
-                attrs={
-                    "axis": axis,
-                    "units": "m",
-                    "standard_name": name,
-                },
-            )
-        return coords
-
-    @property
     def static_coords(self):
-        static_coords = self._create_grid_coords()
-        NUM_REALIZATIONS = 3
-        static_coords["realization"] = xr.Variable(
-            dims=("realization",), data=np.arange(NUM_REALIZATIONS)
-        )
+        static_coords = {}
+        for name, defn in self._static_coords.items():
+            data = defn["data"]
+            if isinstance(data, dict):
+                data = np.linspace(**data)
+            else:
+                data = np.array(data)
+            static_coords[name] = xr.Variable(
+                dims=(name,), data=data, attrs=defn.get("attrs")
+            )
         return static_coords
 
     @property
@@ -189,9 +195,7 @@ class MODataset:
         data_var = data_var[0]
         return dataset[data_var]
 
-    def _get_fcst_url(
-        self, diagnostic, cycle_time=None, validity_time=None, lead_time=None
-    ):
+    def _get_url(self, diagnostic, cycle_time=None, validity_time=None, lead_time=None):
         """Return the URL of a forecast file."""
         # model and diagnostic are strings
         # validity_time (datetime.datetime)
@@ -226,9 +230,7 @@ class MODataset:
         ref_time = pd.to_datetime(np.datetime64(ref_time, "ns"))
         fcst_period = pd.to_timedelta(np.timedelta64(fcst_period, "ns"))
 
-        url = self._get_fcst_url(
-            diagnostic=diag, cycle_time=ref_time, lead_time=fcst_period
-        )
+        url = self._get_url(diagnostic=diag, cycle_time=ref_time, lead_time=fcst_period)
 
         try:
             data = self._read_from_url(url)
@@ -257,37 +259,3 @@ class MODataset:
 
     def to_xarray(self):
         return self.ds
-
-    # passthrough magic methods to xarray dataset...
-    def __copy__(self):
-        return self.ds.__copy__()
-
-    def __deepcopy__(self, memo=None):
-        return self.ds.__deepcopy__(memo=memo)
-
-    def __contains__(self, key):
-        return key in self.ds
-
-    def __len__(self):
-        return len(self.ds)
-
-    def __bool__(self):
-        return bool(self.ds)
-
-    def __iter__(self):
-        return iter(self.ds)
-
-    def __getitem__(self, key):
-        return self.ds[key]
-
-    def __setitem__(self, key, value):
-        self.ds[key] = value
-
-    def __delitem__(self, key):
-        del self.ds[key]
-
-    def __repr__(self):
-        return repr(self.ds)
-
-    def _repr_html_(self):
-        return self.ds._repr_html_()
