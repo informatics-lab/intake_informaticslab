@@ -16,12 +16,35 @@ def test_init():
         diagnostics=['o3', 'no2', 'pm10', 'pm2p5', 'so2'],
         model='aqum_hourly',
         cycle_frequency="1H",
+        dims=["time", "projection_y_coordinate", "projection_x_coordinate"],
+        static_coords={
+            "projection_y_coordinate": {
+                "data": {"start": -184000, "stop": 1222000, "num": 704},
+                "attrs":
+                {
+                    "axis": "y",
+                    "units": "m",
+                    "standard_name": "projection_y_coordinate"
+                }
+            },
+            "projection_x_coordinate": {
+                "data": {"start": -238000, "stop": 856000, "num": 548},
+                "attrs":
+                {
+                    "axis": "x",
+                    "units": "m",
+                    "standard_name": "projection_x_coordinate"
+                }
+            }
+        },
         storage_options={
             "data_protocol": "abfs",
             "url_prefix": "covid19-response",
             "account_name": "metdatasa",
             "credential": None
         })
+
+    assert isinstance(ds, Dataset)
 
 
 def test_from_cat():

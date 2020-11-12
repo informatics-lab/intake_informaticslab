@@ -44,8 +44,7 @@ setup(
     include_package_data=True,
     entry_points={
         'intake.catalogs': [
-            f'met_office_mogreps= {NAME}:mogreps_cat',
-            f'met_office_air_quality= {NAME}:aq_cat'
+            f'met_office= {NAME}:cat',
         ]
     }
 )

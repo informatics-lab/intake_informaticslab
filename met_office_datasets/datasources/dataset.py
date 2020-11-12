@@ -197,9 +197,6 @@ class MODataset:
 
     def _get_url(self, diagnostic, cycle_time=None, validity_time=None, lead_time=None):
         """Return the URL of a forecast file."""
-        # model and diagnostic are strings
-        # validity_time (datetime.datetime)
-        # lead_time (datetime.timedelta)
 
         # determine all times
         cycle_time, validity_time, lead_time = calc_cycle_validity_lead_times(

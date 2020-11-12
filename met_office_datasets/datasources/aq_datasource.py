@@ -18,7 +18,9 @@ class MetOfficeAQDataSource(MetOfficeDataSource):
                  end_cycle,
                  cycle_frequency,
                  model,
+                 dimensions,
                  diagnostics,
+                 static_coords,
                  storage_options,
                  aggregation=None,
                  metadata=None
@@ -35,6 +37,8 @@ class MetOfficeAQDataSource(MetOfficeDataSource):
             cycle_frequency=cycle_frequency,
             forecast_extent=None,
             model=model,
+            dimensions=dimensions,
+            static_coords=static_coords,
             diagnostics=diagnostics,
             storage_options=storage_options,
             metadata=metadata
@@ -45,7 +49,9 @@ class MetOfficeAQDataSource(MetOfficeDataSource):
             start_cycle=self.start_cycle,
             end_cycle=self.end_cycle,
             model=self.model,
+            dims=self.dimensions,
             diagnostics=self.diagnostics,
+            static_coords=self.static_coords,
             cycle_frequency=self.cycle_frequency,
             storage_options=self.storage_options,
             aggregation=self.aggregation
@@ -58,16 +64,28 @@ class AQDataset(MODataset):
         self,
         start_cycle,
         end_cycle,
-        diagnostics,
         model,
+        dims,
+        diagnostics,
+        static_coords,
         cycle_frequency,
         storage_options,
         aggregation=None
     ):
 
-        super().__init__(start_cycle, end_cycle, model, diagnostics,
-                         cycle_freq=cycle_frequency, start_lead_time=None, end_lead_time=None,
-                         lead_time_freq=None, **storage_options)
+        super().__init__(
+            start_cycle=start_cycle,
+            end_cycle=end_cycle,
+            model=model,
+            dims=dims,
+            diagnostics=diagnostics,
+            static_coords=static_coords,
+            cycle_freq=cycle_frequency,
+            start_lead_time=None,
+            end_lead_time=None,
+            lead_time_freq=None,
+            **storage_options)
+
         self.aggregation = aggregation
 
     @ property
@@ -85,6 +103,28 @@ class AQDataset(MODataset):
         chunks.update({'time': time_chunks})
         return chunks
 
+    @staticmethod
+    def _check_dims_coords(dims, static_coords, model):
+        expected_coords = [
+            "projection_x_coordinate",
+            "projection_y_coordinate",
+        ]
+
+        expected_dims = [
+            "time"
+        ] + expected_coords
+
+        pair_dict = {
+            "static_coords": (expected_coords, list(static_coords.keys())),
+            "dims": (expected_dims, dims),
+        }
+
+        for var_type, pair in pair_dict.items():
+            expected, passed_in = pair
+            # check all of expected were passed in
+            if not all(map(lambda var: var in passed_in, expected)):
+                raise ValueError(f"Expected to find all of {expected} in {var_type}")
+
     @ property
     def dynamic_coords(self):
         dynamic_coords_data = {
@@ -96,39 +136,6 @@ class AQDataset(MODataset):
             name: xr.Variable(dims=(name,), data=data)
             for name, data in dynamic_coords_data.items()
         }
-
-    @ property
-    def dims(self):
-        return (
-            "time",
-            "projection_y_coordinate",
-            "projection_x_coordinate",
-        )
-
-    @ property
-    def static_coords(self):
-        static_coords = self._create_grid_coords()
-        return static_coords
-
-    @ staticmethod
-    def _create_grid_coords():
-        GRID_DEFINITION = {"x": (-238000, 856000, 548), "y": (-184000, 1222000, 704)}
-
-        coords = {}
-        for axis in ("x", "y"):
-            name = f"projection_{axis}_coordinate"
-            minval, maxval, npts = GRID_DEFINITION[axis]
-            data = np.linspace(minval, maxval, npts, endpoint=True)
-            coords[name] = xr.Variable(
-                dims=(name,),
-                data=data,
-                attrs={
-                    "axis": axis,
-                    "units": "m",
-                    "standard_name": name,
-                },
-            )
-        return coords
 
     def _get_blob_url(
         self, diagnostic, time=None
