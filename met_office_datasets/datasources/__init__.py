@@ -21,7 +21,9 @@ class MetOfficeDataSource(DataSourceMixin):
         cycle_frequency,
         forecast_extent,
         model,
+        dimensions,
         diagnostics,
+        static_coords,
         storage_options,
         metadata=None,
     ):
@@ -37,7 +39,9 @@ class MetOfficeDataSource(DataSourceMixin):
         self.cycle_frequency = cycle_frequency
         self.forecast_extent = forecast_extent
         self.model = model
+        self.dimensions = dimensions
         self.diagnostics = diagnostics
+        self.static_coords = static_coords
         self.storage_options = storage_options
         self._ds = None
 
@@ -46,7 +50,9 @@ class MetOfficeDataSource(DataSourceMixin):
             start_cycle=self.start_cycle,
             end_cycle=self.end_cycle,
             model=self.model,
+            dims=self.dimensions,
             diagnostics=self.diagnostics,
+            static_coords=self.static_coords,
             cycle_freq=self.cycle_frequency,
             start_lead_time="0H",
             end_lead_time=self.forecast_extent,
