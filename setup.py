@@ -44,7 +44,7 @@ setup(
     include_package_data=True,
     entry_points={
         'intake.catalogs': [
-            f'met_office= {NAME}:cat'
+            f'met_office= {NAME}:cat',
         ]
     }
 )

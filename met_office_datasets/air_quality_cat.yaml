@@ -1,0 +1,88 @@
+metadata:
+  version: 1
+
+sources:
+  air_quality_hourly:
+    description: Met Office Air Quality hourly dataset
+    driver: met_office_datasets.datasources.aq_datasource.MetOfficeAQDataSource
+    args:
+      start_cycle: "{{ start_cycle }}"
+      end_cycle: "{{ end_cycle }}"
+      cycle_frequency: "1H"
+      model: "aqum_hourly"
+      diagnostics: ["o3", "no2", "pm10", "pm2p5", "so2"]
+      dimensions: ["time", "projection_y_coordinate", "projection_x_coordinate"]
+      static_coords:
+        projection_y_coordinate:
+          data: { "start": -184000, "stop": 1222000, "num": 704 }
+          attrs:
+            {
+              "axis": "y",
+              "units": "m",
+              "standard_name": "projection_y_coordinate",
+            }
+        projection_x_coordinate:
+          data: { "start": -238000, "stop": 856000, "num": 548 }
+          attrs:
+            {
+              "axis": "x",
+              "units": "m",
+              "standard_name": "projection_x_coordinate",
+            }
+      storage_options:
+        data_protocol: "abfs"
+        url_prefix: "covid19-response"
+        account_name: "metdatasa"
+        credential: "?si=mo_dataset_intake&sv=2019-12-12&sr=c&sig=hevIcg3TDxHZLB0OgcJha2mx9WnXPWoVM0CEOIOisjM%3D"
+    parameters:
+      start_cycle:
+        description: The start time of the oldest model run
+        type: str
+        default: "20200101T0000Z"
+      end_cycle:
+        description: The start time of the most recent model run
+        type: str
+        default: "latest"
+
+  air_quality_daily:
+    description: Met Office Air Quality daily dataset
+    driver: met_office_datasets.datasources.aq_datasource.MetOfficeAQDataSource
+    args:
+      start_cycle: "{{ start_cycle }}"
+      end_cycle: "{{ end_cycle }}"
+      cycle_frequency: "1D"
+      model: "aqum_daily"
+      diagnostics: ["daqi"]
+      aggregation: "mean"
+      dimensions: ["time", "projection_y_coordinate", "projection_x_coordinate"]
+      static_coords:
+        projection_y_coordinate:
+          data: { "start": -184000, "stop": 1222000, "num": 704 }
+          attrs:
+            {
+              "axis": "y",
+              "units": "m",
+              "standard_name": "projection_y_coordinate",
+            }
+        projection_x_coordinate:
+          data: { "start": -238000, "stop": 856000, "num": 548 }
+          attrs:
+            {
+              "axis": "x",
+              "units": "m",
+              "standard_name": "projection_x_coordinate",
+            }
+      storage_options:
+        data_protocol: "abfs"
+        url_prefix: "covid19-response"
+        account_name: "metdatasa"
+        credential: "?si=mo_dataset_intake&sv=2019-12-12&sr=c&sig=hevIcg3TDxHZLB0OgcJha2mx9WnXPWoVM0CEOIOisjM%3D"
+    parameters:
+      start_cycle:
+        description: The start time of the oldest model run
+        type: str
+        default: "20200101T0000Z"
+      end_cycle:
+        description: The start time of the most recent model run
+        type: str
+        default: "latest"
