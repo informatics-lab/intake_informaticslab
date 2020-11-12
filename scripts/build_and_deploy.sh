@@ -18,5 +18,5 @@ python3 -m twine upload -u __token__ -p $PYPI_TOKEN --repository pypi ${DIS_DIR}
 
 
 # Conda
-cd ..
+cd ${HERE_DIR}/..
 conda-build --user informaticslab -c conda-forge .
