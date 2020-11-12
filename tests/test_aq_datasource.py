@@ -44,8 +44,6 @@ def test_init():
             "credential": None
         })
 
-    assert isinstance(ds, Dataset)
-
 
 def test_from_cat():
     import intake
