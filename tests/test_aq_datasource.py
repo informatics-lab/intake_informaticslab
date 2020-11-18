@@ -48,7 +48,7 @@ def test_init():
 def test_from_cat():
     import intake
     import os
-    cat_path = os.path.join(os.path.dirname(__file__), "../met_office_datasets/air_quality_cat.yaml")
+    cat_path = os.path.join(os.path.dirname(__file__), "../met_office_datasets/cats/air_quality_cat.yaml")
     cat = intake.open_catalog(cat_path)
     ds = cat.air_quality_hourly.read_chunked()
     assert isinstance(ds, Dataset)
