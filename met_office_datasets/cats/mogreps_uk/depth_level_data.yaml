@@ -2,8 +2,8 @@ metadata:
   version: 1
 
 sources:
-  mogreps_uk:
-    description: Met Office MOGREPS-UK dataset
+  depth_level:
+    description: "Met Office MOGREPS-UK dataset on depth levels"
     driver: met_office_datasets.datasources.MetOfficeDataSource
     args:
       start_cycle: "{{ start_cycle }}"
@@ -15,34 +15,12 @@ sources:
         "forecast_reference_time",
         "forecast_period",
         "realization",
+        "depth",
         "projection_y_coordinate",
         "projection_x_coordinate",
       ]
       diagnostics: [
-        "cloud_amount_of_low_cloud",
-        "cloud_amount_of_medium_cloud",
-        "cloud_amount_of_total_cloud",
-        "fog_fraction_at_screen_level",
-        "hail_fall_accumulation-PT01H",
-        "height_ASL_at_freezing_level",
-        "lightning_flash_accumulation-PT01H",
-        "radiation_flux_in_longwave_downward_at_surface",
-        "radiation_flux_in_shortwave_diffuse_downward_at_surface",
-        "radiation_flux_in_shortwave_direct_downward_at_surface",
-        "radiation_flux_in_shortwave_total_downward_at_surface",
-        "rainfall_accumulation-PT01H",
-        "relative_humidity_at_screen_level",
-        "sensible_heat_flux_at_surface",
-        "snow_depth_water_equivalent",
-        "snowfall_accumulation-PT01H",
-        "temperature_at_screen_level",
-        "temperature_at_screen_level_max-PT01H",
-        "temperature_at_screen_level_min-PT01H",
-        "temperature_at_surface",
-        "visibility_at_screen_level",
-        "wind_direction_at_10m",
-        "wind_speed_at_10m",
-        "wind_speed_at_10m_max-PT01H",
+        "soil_temperature_on_soil_levels",
       ]
       static_coords:
         realization:
@@ -50,6 +28,16 @@ sources:
           attrs: {
             "units": "1",
             "standard_name": "realization"
+          }
+        depth:
+          data: [
+            0.05 , 0.225, 0.675, 2.0
+          ]
+          attrs: {
+            "standard_name": "depth",
+            "units": "m",
+            "positive": "down",
+            "axis": "Z",
           }
         projection_y_coordinate:
           data: {
@@ -75,8 +63,8 @@ sources:
           }
       storage_options:
         data_protocol: "abfs"
-        url_prefix: "metdatasa"
-        account_name: "met-office-models-ncdf"
+        url_prefix: "met-office-models-ncdf"
+        account_name: "metdatasa"
         credential: "?si=intake-driver&sv=2019-12-12&sr=c&sig=7HlHkSnORP2k2dl6ohVmPMkfkuwq9m7RhDvLmcwwgVo%3D"
     parameters:
       start_cycle:

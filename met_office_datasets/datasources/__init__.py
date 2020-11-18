@@ -1,5 +1,6 @@
 import datetime
 
+from intake.catalog.local import YAMLFilesCatalog
 from intake.source.base import Schema
 from intake_xarray.base import DataSourceMixin
 from met_office_datasets import __version__
@@ -80,3 +81,29 @@ class MetOfficeDataSource(DataSourceMixin):
                 extra_metadata=metadata,
             )
         return self._schema
+
+
+class MergedMetOfficeDataSource(YAMLFilesCatalog):
+    name = "merged_met_office"
+    version = __version__
+
+    def __init__(self, path, flatten=True, **kwargs):
+        metadata = kwargs.pop("metadata")
+        super().__init__(path, flatten=flatten, metadata=metadata)
+        self._kwargs = kwargs
+        self._ds = None
+
+    def to_dask(self):
+        if self._ds is not None:
+            return self._ds
+
+        for entry in self._entries.values():
+            dataset = entry(**self._kwargs).to_dask()
+            if self._ds is None:
+                self._ds = dataset
+            else:
+                self._ds = self._ds.merge(dataset)
+        return self._ds
+
+    def read_chunked(self):
+        return self.to_dask()
