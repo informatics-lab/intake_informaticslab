@@ -75,8 +75,8 @@ sources:
           }
       storage_options:
         data_protocol: "abfs"
-        url_prefix: "metdatasa"
-        account_name: "met-office-models-ncdf"
+        url_prefix: "met-office-models-ncdf"
+        account_name: "metdatasa"
         credential: "?si=intake-driver&sv=2019-12-12&sr=c&sig=7HlHkSnORP2k2dl6ohVmPMkfkuwq9m7RhDvLmcwwgVo%3D"
     parameters:
       start_cycle:
