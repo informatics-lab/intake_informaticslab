@@ -9,6 +9,51 @@ from met_office_datasets import __version__
 from met_office_datasets.datasources import MetOfficeDataSource
 
 
+class TimeSeriesDatasource(MetOfficeDataSource):
+    name = "met_office_ukv_timeseries"
+    version = __version__
+
+    def __init__(self,
+                 start_cycle,
+                 end_cycle,
+                 cycle_frequency,
+                 model,
+                 dimensions,
+                 diagnostics,
+                 static_coords,
+                 storage_options,
+                 metadata=None
+                 ):
+
+        if end_cycle.lower() == 'latest':
+            end_cycle = datetime_to_iso_str((datetime.datetime.now() - datetime.timedelta(hours=48)))
+
+        super().__init__(
+            start_cycle=start_cycle,
+            end_cycle=end_cycle,
+            cycle_frequency=cycle_frequency,
+            forecast_extent=None,
+            model=model,
+            dimensions=dimensions,
+            static_coords=static_coords,
+            diagnostics=diagnostics,
+            storage_options=storage_options,
+            metadata=metadata
+        )
+
+    def _open_dataset(self):
+        self._ds = TimeSeriesDataset(
+            start_cycle=self.start_cycle,
+            end_cycle=self.end_cycle,
+            model=self.model,
+            dims=self.dimensions,
+            diagnostics=self.diagnostics,
+            static_coords=self.static_coords,
+            cycle_frequency=self.cycle_frequency,
+            storage_options=self.storage_options,
+        ).ds
+
+
 class MetOfficeAQDataSource(MetOfficeDataSource):
     name = "met_office_aq"
     version = __version__
@@ -58,7 +103,7 @@ class MetOfficeAQDataSource(MetOfficeDataSource):
         ).ds
 
 
-class AQDataset(MODataset):
+class SingleTimeDataset(MODataset):
 
     def __init__(
         self,
@@ -105,10 +150,17 @@ class AQDataset(MODataset):
 
     @staticmethod
     def _check_dims_coords(dims, static_coords, model):
-        expected_coords = [
-            "projection_x_coordinate",
-            "projection_y_coordinate",
-        ]
+        # two types of grid def, assume one based on presence of "grid_latitude" or not
+        if "grid_latitude" in dims:
+            expected_coords = [
+                "grid_longitude",
+                "grid_latitude"
+            ]
+        else:
+            expected_coords = [
+                "projection_x_coordinate",
+                "projection_y_coordinate"
+            ]
 
         expected_dims = [
             "time"
@@ -137,20 +189,6 @@ class AQDataset(MODataset):
             for name, data in dynamic_coords_data.items()
         }
 
-    def _get_blob_url(
-        self, diagnostic, time=None
-    ):
-        """Return the URL of a forecast file."""
-
-        # convert all to strings
-        time_str = datetime_to_iso_str(time).split('T')[0]
-        ag_str = f"_{self.aggregation}" if self.aggregation else ""
-        obj_path = (
-            f"metoffice_{self.model}/{diagnostic}/{self.model}_{diagnostic}{ag_str}_{time_str}.nc"
-        )
-        obj_path = f"{self.url_prefix}/{obj_path}"
-        return f"{self.data_protocol}://{obj_path}"
-
     def _zstore_loader(self, attrs):
         time = attrs["time"]
         diag = attrs["variable_name"]
@@ -172,12 +210,15 @@ class AQDataset(MODataset):
     @ staticmethod
     def _extract_data_as_dataarray(dataset):
         # coords in all datasets
-        REQUIRED_COORD_VARS = [
+        DIM_COORD_VARS = [
             "time",
             "projection_y_coordinate",
             "projection_x_coordinate",
             "forecast_reference_time",
-            "forecast_day"
+            "forecast_day",
+            "grid_longitude",
+            "grid_latitude",
+            "forecast_period"
         ]
 
         # coords only in some datasets
@@ -185,23 +226,24 @@ class AQDataset(MODataset):
 
         # variables that are not in coords or dims (including 'bnds' in dims)
         # but in all datasets
-        REQUIRED_NON_COORD_DIM_VARS = [
+        NON_COORD_DIM_VARS = [
             "lambert_azimuthal_equal_area",
             "projection_y_coordinate_bnds",
             "projection_x_coordinate_bnds",
             "transverse_mercator",
-            "experiment_number"
+            "experiment_number",
+            "rotated_latitude_longitude"
         ]
 
         # vars that are not coords/dims but are optional
-        TIME_BOUND_VARS = ["time_bnds", "forecast_period_bnds"]
+        TIME_BOUND_VARS = ["time_bnds", "forecast_period_bnds", "forecast_reference_time_bnds"]
 
         # also has 'depth_bnds' optionally..
         # need to figure out which variable is the data variable
         NON_DATA_VARS = (
-            REQUIRED_COORD_VARS
+            DIM_COORD_VARS
             + VERTICAL_COORD_VARS
-            + REQUIRED_NON_COORD_DIM_VARS
+            + NON_COORD_DIM_VARS
             + TIME_BOUND_VARS
             + ["depth_bnds"]
         )
@@ -211,3 +253,43 @@ class AQDataset(MODataset):
             raise RuntimeError("Expected to find only 1 data variable")
         data_var = data_var[0]
         return dataset[data_var]
+
+
+class TimeSeriesDataset(SingleTimeDataset):
+
+    def _get_blob_url(
+        self, diagnostic, time=None
+    ):
+        """Return the URL of a forecast file."""
+
+        # convert all to strings
+        if self.cycle_freq == '1H':
+            frequency = 'hourly'
+        elif self.cycle_freq == '1D':
+            frequency = 'daily'
+        else:
+            raise RuntimeError(f"Don't know how to deal with cycle_freq {cycle_freq} for chunking")
+
+        time_str = datetime_to_iso_str(time).split('T')[0]
+        obj_path = (
+            f"metoffice_{self.model}_{frequency}/{diagnostic}/{self.model}_{frequency}_{diagnostic}_{time_str}.nc"
+        )
+        obj_path = f"{self.url_prefix}/{obj_path}"
+        return f"{self.data_protocol}://{obj_path}"
+
+
+class AQDataset(SingleTimeDataset):
+
+    def _get_blob_url(
+        self, diagnostic, time=None
+    ):
+        """Return the URL of a forecast file."""
+
+        # convert all to strings
+        time_str = datetime_to_iso_str(time).split('T')[0]
+        ag_str = f"_{self.aggregation}" if self.aggregation else ""
+        obj_path = (
+            f"metoffice_{self.model}/{diagnostic}/{self.model}_{diagnostic}{ag_str}_{time_str}.nc"
+        )
+        obj_path = f"{self.url_prefix}/{obj_path}"
+        return f"{self.data_protocol}://{obj_path}"
