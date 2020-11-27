@@ -3,7 +3,7 @@ metadata:
 
 sources:
   ukv_daily_timeseries:
-    description: Met Office UKV (high resolution uk model) data, stitched into continues timeses by using the shortest lead time from multiple model runs.
+    description: Met Office UKV (high resolution uk model) data from 01/01/20 to approx present, stitched into continues times series by using the shortest lead time from multiple model runs. Daily temporal resolution.
     driver: met_office_datasets.datasources.aq_datasource.TimeSeriesDatasource
     args:
       start_cycle: "{{ start_cycle }}"
@@ -39,6 +39,60 @@ sources:
           "windspeed_max",
           "windspeed_mean",
           "windspeed_min",
+        ]
+      dimensions: ["time", "grid_latitude", "grid_longitude"]
+      static_coords:
+        grid_latitude:
+          data: { "start": -3.7572, "stop": 7.1373005, "num": 808 }
+          attrs:
+            {
+              "axis": "y",
+              "units": "degrees",
+              "standard_name": "grid_latitude",
+            }
+        grid_longitude:
+          data: { "start": 354.94247437, "stop": 363.31247458, "num": 621 }
+          attrs:
+            {
+              "axis": "x",
+              "units": "degrees",
+              "standard_name": "grid_longitude",
+            }
+      storage_options:
+        data_protocol: "abfs"
+        url_prefix: "covid19-response"
+        account_name: "metdatasa"
+        credential: "?si=mo_dataset_intake&sv=2019-12-12&sr=c&sig=hevIcg3TDxHZLB0OgcJha2mx9WnXPWoVM0CEOIOisjM%3D"
+    parameters:
+      start_cycle:
+        description: The start time of the oldest model run
+        type: str
+        default: "20200101T0000Z"
+      end_cycle:
+        description: The start time of the most recent model run
+        type: str
+        default: "latest"
+
+  ukv_hourly_timeseries:
+    description: Met Office UKV (high resolution uk model) data from 01/01/20 to approx present, stitched into continues times series by using the shortest lead time from multiple model runs. Hourly temporal resolution.
+    driver: met_office_datasets.datasources.aq_datasource.TimeSeriesDatasource
+    args:
+      start_cycle: "{{ start_cycle }}"
+      end_cycle: "{{ end_cycle }}"
+      cycle_frequency: "1H"
+      model: "ukv"
+      diagnostics:
+        [
+          "cldbase",
+          "cldfrac",
+          "pmsl",
+          "rain",
+          "sh",
+          "snow",
+          "sw",
+          "t1o5m",
+          "windgust",
+          "windspeed",
         ]
       dimensions: ["time", "grid_latitude", "grid_longitude"]
       static_coords:

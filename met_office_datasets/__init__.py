@@ -17,11 +17,14 @@ CATALOG_DIR = os.path.join(os.path.dirname(__file__), 'cats')
 
 mogreps_cat = intake.open_catalog(os.path.join(CATALOG_DIR, 'mogreps_uk_cat.yaml'))
 aq_cat = intake.open_catalog(os.path.join(CATALOG_DIR, 'air_quality_cat.yaml'))
+ukv_2020_plus_cat = intake.open_catalog(os.path.join(CATALOG_DIR, 'ukv_timeseries.yaml'))
 
 cat = intake.catalog.Catalog.from_dict(
     {
         'air_quality':aq_cat,
-        'weather_forecasts':mogreps_cat
+        'weather_forecasts':mogreps_cat,
+        'weather_timeseries_uk':ukv_2020_plus_cat
+
     }, name="Met Office Datasets")
 
 # fmt: on
