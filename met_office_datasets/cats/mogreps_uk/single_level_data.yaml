@@ -75,7 +75,7 @@ sources:
       start_cycle:
         description: The start time of the oldest model run
         type: str
-        default: "20201018T0800Z"
+        default: "20201126T0800Z"
       end_cycle:
         description: The start time of the most recent model run
         type: str
