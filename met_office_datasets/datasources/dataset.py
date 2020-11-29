@@ -161,16 +161,21 @@ class MODataset:
         static_coords = self.static_coords
         return {name: static_coords[name].shape[0] for name in static_coords.keys()}
 
-    @staticmethod
-    def _extract_data_as_dataarray(dataset):
+    def _extract_data_as_dataarray(self, dataset):
+
+        if 'projection_x_coordinate' in self.static_coords:
+            x_name, y_name = ["projection_x_coordinate", "projection_y_coordinate"]
+        else:
+            x_name, y_name = ["longitude", "latitude"]
+
         # coords in all datasets
         REQUIRED_COORD_VARS = [
             "time",
             "forecast_reference_time",
             "realization",
-            "projection_y_coordinate",
+            y_name,
             "forecast_period",
-            "projection_x_coordinate",
+            x_name,
         ]
 
         # coords only in some datasets
@@ -180,8 +185,8 @@ class MODataset:
         # but in all datasets
         REQUIRED_NON_COORD_DIM_VARS = [
             "lambert_azimuthal_equal_area",
-            "projection_y_coordinate_bnds",
-            "projection_x_coordinate_bnds",
+            f"{x_name}_bnds",
+            f"{y_name}_bnds",
         ]
 
         # vars that are not coords/dims but are optional
@@ -199,7 +204,7 @@ class MODataset:
 
         data_var = list(set(dataset.variables) - set(NON_DATA_VARS))
         if len(data_var) > 1:
-            raise RuntimeError("Expected to find only 1 data variable")
+            raise RuntimeError(f"Expected to find only 1 data variable but got: {data_var}")
         data_var = data_var[0]
         return dataset[data_var]
 
