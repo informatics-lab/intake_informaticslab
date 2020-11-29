@@ -8,7 +8,7 @@ sources:
     args:
       start_cycle: "{{ start_cycle }}"
       end_cycle: "{{ end_cycle }}"
-      cycle_frequency: "1H"
+      cycle_frequency: "6H"
       forecast_extent: "126H"
       model: "mo-atmospheric-mogreps-g"
       dimensions:
@@ -53,7 +53,7 @@ sources:
       start_cycle:
         description: The start time of the oldest model run
         type: str
-        default: "20201126T0800Z"
+        default: "20201126T0600Z"
       end_cycle:
         description: The start time of the most recent model run
         type: str
