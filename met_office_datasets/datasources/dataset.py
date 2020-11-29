@@ -67,10 +67,17 @@ class MODataset:
 
     @staticmethod
     def _check_dims_coords(dims, static_coords, model):
-        expected_coords = [
-            "projection_x_coordinate",
-            "projection_y_coordinate",
-        ]
+
+        if 'projection_x_coordinate' in static_coords:
+            expected_coords = [
+                "projection_x_coordinate",
+                "projection_y_coordinate",
+            ]
+        else:
+            expected_coords = [
+                "longitude",
+                "latitude",
+            ]
         if model == "mo-atmospheric-mogreps-uk":
             expected_coords += ["realization"]
 
