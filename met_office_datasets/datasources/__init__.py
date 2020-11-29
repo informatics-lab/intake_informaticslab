@@ -8,7 +8,7 @@ from met_office_datasets import __version__
 from .dataset import MODataset
 from .utils import datetime_to_iso_str
 
-DATA_DELAY = 24  # num hours from current time that data is available
+DATA_DELAY = 24 + 6  # num hours from current time that data is available
 
 
 class MetOfficeDataSource(DataSourceMixin):
