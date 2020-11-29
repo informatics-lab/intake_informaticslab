@@ -163,13 +163,16 @@ class MODataset:
 
     def _extract_data_as_dataarray(self, dataset):
 
+        REQUIRED_COORD_VARS = []
+
         if 'projection_x_coordinate' in self.static_coords:
             x_name, y_name = ["projection_x_coordinate", "projection_y_coordinate"]
         else:
             x_name, y_name = ["longitude", "latitude"]
+            REQUIRED_COORD_VARS += ["latitude_longitude"]
 
         # coords in all datasets
-        REQUIRED_COORD_VARS = [
+        REQUIRED_COORD_VARS += [
             "time",
             "forecast_reference_time",
             "realization",
