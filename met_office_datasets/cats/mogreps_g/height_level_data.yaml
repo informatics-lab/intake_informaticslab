@@ -17,8 +17,8 @@ sources:
           "forecast_period",
           "realization",
           "height",
-          "longitude",
           "latitude",
+          "longitude",
         ]
       diagnostics: ["temperature_on_height_levels"]
       static_coords:
@@ -73,7 +73,7 @@ sources:
           data: { "start": -179.85938, "stop": 179.85938, "num": 1280 }
           attrs:
             {
-              "axis": "y",
+              "axis": "x",
               "units": "degrees_east",
               "standard_name": "longitude",
             }
@@ -81,7 +81,7 @@ sources:
           data: { "start": -89.90625, "stop": 89.90625, "num": 960 }
           attrs:
             {
-              "axis": "x",
+              "axis": "y",
               "units": "degrees_north",
               "standard_name": "latitude",
             }
