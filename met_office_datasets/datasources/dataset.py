@@ -1,16 +1,17 @@
+from .utils import (
+    calc_cycle_validity_lead_times,
+    datetime_to_iso_str,
+    timedelta_to_duration_str,
+)
+from ..zarrhypothetic.zarrhypothetic import HypotheticZarrStore
 from io import BytesIO
 
 import fsspec
 import numpy as np
 import pandas as pd
 import xarray as xr
-
-from ..zarrhypothetic.zarrhypothetic import HypotheticZarrStore
-from .utils import (
-    calc_cycle_validity_lead_times,
-    datetime_to_iso_str,
-    timedelta_to_duration_str,
-)
+import logging
+logger = logging.getLogger(__name__)
 
 
 # TODO: remove hardcoded assumptions about MOGREPS-UK
@@ -215,6 +216,7 @@ class MODataset:
         return f"{self.data_protocol}://{obj_path}"
 
     def _read_from_url(self, url, mode="rb"):
+        logger.info(f"Request: {url}")
         with fsspec.open(url, mode, **self.storage_options) as of:
             data = of.read()
         return data
@@ -235,6 +237,7 @@ class MODataset:
             data = self._extract_data_as_dataarray(data)
             return data.values
         except FileNotFoundError:
+            logger.info(f"NOT FOUND: {url}")
             return None
 
     def _create_zstore(self):

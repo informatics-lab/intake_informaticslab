@@ -22,9 +22,8 @@ requirements:
     - xarray
     - intake-xarray
     - zarr>=2
-    - adlfs
+    - adlfs=0.5.5
     - h5netcdf>=0.8
-    - adlfs
     - intake
   host:
     - python
@@ -36,9 +35,8 @@ requirements:
     - xarray
     - intake-xarray
     - zarr>=2
-    - adlfs
+    - adlfs=0.5.5
     - h5netcdf>=0.8
-    - adlfs
     - intake
 test:
   files:
