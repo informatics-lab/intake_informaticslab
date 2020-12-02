@@ -1,15 +1,15 @@
 # Intake Informatics Lab
 
-A driver and intake catalogues providing access to hundreds of terabytes of Met Office data.
+Intake catalogues and associated drivers which provide access to hundreds of terabytes of Met Office data.
 
 ## Licence
 
-Please note datasets have different licences and not all are fully open, e.g. some prohibit non-commercial.
+Please note that individual datasets have different licenses and not all are fully open, e.g. some prohibit non-commercial use.
 
-*Please ensure that you full understand the licence terms of the dataset before using that data.*
+*Please ensure that you fully understand the license terms of the dataset before using the data.*
 
-If you use the catalogues made available in this package the licences are described [in the 'Datasets' section below](#datasets).
-If accessing the data direct or creating your own catalogue or instance of the driver the licence should be found in `LICENCE.txt` or `LICENCE.md` at the data root.
+If using the catalogues made available in this package, the licenses are described [in the 'Datasets' section below](#datasets).
+If accessing the data directly, or creating your own catalogue (and/or instance of the driver), the license is found in `LICENCE.txt` or `LICENCE.md` at the data root.
 
 The code in this repository is made available under the MIT Licence.
 

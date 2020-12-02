@@ -12,7 +12,7 @@ setup(
     name=NAME,
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
-    description="A driver and intake catalogues providing access to hundreds of terabytes of Met Office data.",
+    description="Intake catalogues and associated drivers providing access to hundreds of terabytes of Met Office data.",
     url="https://github.com/informatics-lab/intake_informaticslab",
     author="Theo McCaie",
     author_email="theo.mccaie@informaticslab.co.uk",
