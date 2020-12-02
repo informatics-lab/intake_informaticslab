@@ -77,6 +77,7 @@ sources:
         url_prefix: "covid19-response"
         account_name: "metdatasa"
         credential: "?si=mo_dataset_intake&sv=2019-12-12&sr=c&sig=hevIcg3TDxHZLB0OgcJha2mx9WnXPWoVM0CEOIOisjM%3D"
+      license: "Open Government License (http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/)"
     parameters:
       start_cycle:
         description: The start time of the oldest model run

@@ -3,7 +3,7 @@ metadata:
 
 sources:
   mogreps_uk:
-    description: "Met Office StaGE processed NWP data"
+    description: "Processed weather forecast model output form the UK Met Offices MOGREP UK model."
     driver: intake_informaticslab.datasources.MergedMetOfficeDataSource
     args:
       path:

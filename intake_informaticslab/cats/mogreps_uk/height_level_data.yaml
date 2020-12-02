@@ -90,6 +90,7 @@ sources:
         url_prefix: "models"
         account_name: "metdatasa"
         credential: "?si=metoffice_datasets_intake&sv=2019-12-12&sr=c&sig=NuOQZ2OWTeJS8Tw%2FPGp7UCT5%2B62iLYNEKLILUeCIFt0%3D"
+      license: "Creative Commons licence (https://creativecommons.org/licenses/by-nc-nd/4.0/)"
     parameters:
       start_cycle:
         description: The start time of the oldest model run
