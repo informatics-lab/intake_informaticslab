@@ -1,0 +1,102 @@
+metadata:
+  version: 1
+
+sources:
+  height_level:
+    description: "Met Office MOGREPS-UK dataset on height levels"
+    driver: intake_informaticslab.datasources.MetOfficeDataSource
+    args:
+      start_cycle: "{{ start_cycle }}"
+      end_cycle: "{{ end_cycle }}"
+      cycle_frequency: "1H"
+      forecast_extent: "126H"
+      model: "mo-atmospheric-mogreps-uk"
+      dimensions:
+        [
+          "forecast_reference_time",
+          "forecast_period",
+          "realization",
+          "height",
+          "projection_y_coordinate",
+          "projection_x_coordinate",
+        ]
+      diagnostics: ["temperature_on_height_levels"]
+      static_coords:
+        realization:
+          data: [0, 1, 2]
+          attrs: { "units": "1", "standard_name": "realization" }
+        height:
+          data:
+            [
+              5.0,
+              10.0,
+              20.0,
+              30.0,
+              50.0,
+              75.0,
+              100.0,
+              150.0,
+              200.0,
+              250.0,
+              300.0,
+              400.0,
+              500.0,
+              600.0,
+              700.0,
+              800.0,
+              1000.0,
+              1250.0,
+              1500.0,
+              1750.0,
+              2000.0,
+              2250.0,
+              2500.0,
+              2750.0,
+              3000.0,
+              3250.0,
+              3500.0,
+              3750.0,
+              4000.0,
+              4500.0,
+              5000.0,
+              5500.0,
+              6000.0,
+            ]
+          attrs:
+            {
+              "standard_name": "height",
+              "units": "m",
+              "positive": "up",
+              "axis": "Z",
+            }
+        projection_y_coordinate:
+          data: { "start": -1036000, "stop": 902000, "num": 970 }
+          attrs:
+            {
+              "axis": "y",
+              "units": "m",
+              "standard_name": "projection_y_coordinate",
+            }
+        projection_x_coordinate:
+          data: { "start": -1158000, "stop": 924000, "num": 1042 }
+          attrs:
+            {
+              "axis": "x",
+              "units": "m",
+              "standard_name": "projection_x_coordinate",
+            }
+      storage_options:
+        data_protocol: "abfs"
+        url_prefix: "models"
+        account_name: "metdatasa"
+        credential: "?si=metoffice_datasets_intake&sv=2019-12-12&sr=c&sig=NuOQZ2OWTeJS8Tw%2FPGp7UCT5%2B62iLYNEKLILUeCIFt0%3D"
+      license: "Creative Commons licence (https://creativecommons.org/licenses/by-nc-nd/4.0/)"
+    parameters:
+      start_cycle:
+        description: The start time of the oldest model run
+        type: str
+        default: "20201126T0800Z"
+      end_cycle:
+        description: The start time of the most recent model run
+        type: str
+        default: "latest"

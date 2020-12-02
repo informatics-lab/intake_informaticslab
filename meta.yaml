@@ -22,9 +22,8 @@ requirements:
     - xarray
     - intake-xarray
     - zarr>=2
-    - adlfs
+    - adlfs=0.5.5
     - h5netcdf>=0.8
-    - adlfs
     - intake
   host:
     - python
@@ -36,9 +35,8 @@ requirements:
     - xarray
     - intake-xarray
     - zarr>=2
-    - adlfs
+    - adlfs=0.5.5
     - h5netcdf>=0.8
-    - adlfs
     - intake
 test:
   files:
@@ -49,7 +47,7 @@ test:
     - pytest
 
 about:
-  home: https://github.com/informatics-lab/met_office_datasets
+  home: https://github.com/informatics-lab/intake_informaticslab
   license: GPLv3
   license_family: GPL3
   license_file: LICENSE

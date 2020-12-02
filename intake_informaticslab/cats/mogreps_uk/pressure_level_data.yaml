@@ -1,0 +1,61 @@
+metadata:
+  version: 1
+
+sources:
+  pressure_level:
+    description: "Met Office MOGREPS-UK dataset on pressure levels"
+    driver: intake_informaticslab.datasources.MetOfficeDataSource
+    args:
+      start_cycle: "{{ start_cycle }}"
+      end_cycle: "{{ end_cycle }}"
+      cycle_frequency: "1H"
+      forecast_extent: "126H"
+      model: "mo-atmospheric-mogreps-uk"
+      dimensions:
+        [
+          "forecast_reference_time",
+          "forecast_period",
+          "realization",
+          "pressure",
+          "projection_y_coordinate",
+          "projection_x_coordinate",
+        ]
+      diagnostics: ["wet_bulb_potential_temperature_on_pressure_levels"]
+      static_coords:
+        realization:
+          data: [0, 1, 2]
+          attrs: { "units": "1", "standard_name": "realization" }
+        pressure:
+          data: [50000.0, 70000.0, 85000.0]
+          attrs: { "long_name": "pressure", "units": "Pa", "axis": "Z" }
+        projection_y_coordinate:
+          data: { "start": -1036000, "stop": 902000, "num": 970 }
+          attrs:
+            {
+              "axis": "y",
+              "units": "m",
+              "standard_name": "projection_y_coordinate",
+            }
+        projection_x_coordinate:
+          data: { "start": -1158000, "stop": 924000, "num": 1042 }
+          attrs:
+            {
+              "axis": "x",
+              "units": "m",
+              "standard_name": "projection_x_coordinate",
+            }
+      storage_options:
+        data_protocol: "abfs"
+        url_prefix: "models"
+        account_name: "metdatasa"
+        credential: "?si=metoffice_datasets_intake&sv=2019-12-12&sr=c&sig=NuOQZ2OWTeJS8Tw%2FPGp7UCT5%2B62iLYNEKLILUeCIFt0%3D"
+      license: "Creative Commons licence (https://creativecommons.org/licenses/by-nc-nd/4.0/)"
+    parameters:
+      start_cycle:
+        description: The start time of the oldest model run
+        type: str
+        default: "20201126T0800Z"
+      end_cycle:
+        description: The start time of the most recent model run
+        type: str
+        default: "latest"

@@ -6,14 +6,14 @@ this_dir = path.abspath(path.dirname(__file__))
 with open(path.join(this_dir, "README.md")) as f:
     long_description = f.read()
 
-NAME = "met_office_datasets"
+NAME = "intake_informaticslab"
 
 setup(
     name=NAME,
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
-    description="DESCRIPTION",
-    url="https://github.com/informatics-lab/met_office_datasets",
+    description="Intake catalogues and associated drivers providing access to hundreds of terabytes of Met Office data.",
+    url="https://github.com/informatics-lab/intake_informaticslab",
     author="Theo McCaie",
     author_email="theo.mccaie@informaticslab.co.uk",
     classifiers=[
@@ -32,9 +32,8 @@ setup(
                       'dask>=1.0',
                       'xarray',
                       'zarr>=2',
-                      'adlfs',
+                      'adlfs=0.5.5',
                       'h5netcdf>=0.8',
-                      'adlfs',
                       'intake',
                       'intake-xarray',
                       'toolz'],

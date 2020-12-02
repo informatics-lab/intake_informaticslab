@@ -1,0 +1,83 @@
+metadata:
+  version: 1
+
+sources:
+  single_level:
+    description: "Met Office MOGREPS-G dataset on a single vertical level"
+    driver: intake_informaticslab.datasources.MetOfficeDataSource
+    args:
+      start_cycle: "{{ start_cycle }}"
+      end_cycle: "{{ end_cycle }}"
+      cycle_frequency: "6H"
+      forecast_extent: "126H"
+      model: "mo-atmospheric-mogreps-g"
+      dimensions:
+        [
+          "forecast_reference_time",
+          "forecast_period",
+          "realization",
+          "latitude",
+          "longitude",
+        ]
+      diagnostics:
+        [
+          "cloud_amount_of_low_cloud",
+          "cloud_amount_of_medium_cloud",
+          "cloud_amount_of_total_cloud",
+          "fog_fraction_at_screen_level",
+          "hail_fall_accumulation-PT01H",
+          "height_ASL_at_freezing_level",
+          "lightning_flash_accumulation-PT01H",
+          "radiation_flux_in_longwave_downward_at_surface",
+          "radiation_flux_in_shortwave_diffuse_downward_at_surface",
+          "radiation_flux_in_shortwave_direct_downward_at_surface",
+          "radiation_flux_in_shortwave_total_downward_at_surface",
+          "rainfall_accumulation-PT01H",
+          "relative_humidity_at_screen_level",
+          "sensible_heat_flux_at_surface",
+          "snow_depth_water_equivalent",
+          "snowfall_accumulation-PT01H",
+          "temperature_at_screen_level",
+          "temperature_at_screen_level_max-PT01H",
+          "temperature_at_screen_level_min-PT01H",
+          "temperature_at_surface",
+          "visibility_at_screen_level",
+          "wind_direction_at_10m",
+          "wind_speed_at_10m",
+          "wind_speed_at_10m_max-PT01H",
+        ]
+      static_coords:
+        realization:
+          data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+          attrs: { "units": "1", "standard_name": "realization" }
+        longitude:
+          data: { "start": -179.85938, "stop": 179.85938, "num": 1280 }
+          attrs:
+            {
+              "axis": "x",
+              "units": "degrees_east",
+              "standard_name": "longitude",
+            }
+        latitude:
+          data: { "start": -89.90625, "stop": 89.90625, "num": 960 }
+          attrs:
+            {
+              "axis": "y",
+              "units": "degrees_north",
+              "standard_name": "latitude",
+            }
+      storage_options:
+        data_protocol: "abfs"
+        url_prefix: "models"
+        account_name: "metdatasa"
+        credential: "?si=metoffice_datasets_intake&sv=2019-12-12&sr=c&sig=NuOQZ2OWTeJS8Tw%2FPGp7UCT5%2B62iLYNEKLILUeCIFt0%3D"
+      license: "Creative Commons licence (https://creativecommons.org/licenses/by-nc-nd/4.0/)"
+    parameters:
+      start_cycle:
+        description: The start time of the oldest model run
+        type: str
+        default: "20201126T0600Z"
+      end_cycle:
+        description: The start time of the most recent model run
+        type: str
+        default: "latest"

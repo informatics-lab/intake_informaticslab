@@ -1,0 +1,16 @@
+metadata:
+  version: 1
+
+sources:
+  mogreps_uk:
+    description: "Processed weather forecast model output form the UK Met Offices MOGREP UK model."
+    driver: intake_informaticslab.datasources.MergedMetOfficeDataSource
+    args:
+      path:
+        [
+          "{{ CATALOG_DIR }}/mogreps_uk/single_level_data.yaml",
+          "{{ CATALOG_DIR }}/mogreps_uk/height_level_data.yaml",
+          "{{ CATALOG_DIR }}/mogreps_uk/pressure_level_data.yaml",
+          "{{ CATALOG_DIR }}/mogreps_uk/depth_level_data.yaml",
+        ]
+      flatten: true
