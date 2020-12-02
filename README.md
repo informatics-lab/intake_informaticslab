@@ -4,7 +4,7 @@ A driver and intake catalogues providing access to hundreds of terabytes of Met 
 
 ## Licence
 
-Please note datasets have different licences and not all are fully open, e.g. some prohibit non-commercial.
+Please note that individual datasets have different licenses and not all are fully open, e.g. some prohibit non-commercial use.
 
 *Please ensure that you full understand the licence terms of the dataset before using that data.*
 
