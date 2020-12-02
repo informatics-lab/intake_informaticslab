@@ -1,6 +1,6 @@
 # Intake Informatics Lab
 
-A driver and intake catalogues providing access to hundreds of terabytes of Met Office data.
+Intake catalogues and associated drivers which provide access to hundreds of terabytes of Met Office data.
 
 ## Licence
 
