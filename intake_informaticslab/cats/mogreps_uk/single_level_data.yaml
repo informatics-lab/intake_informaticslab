@@ -3,21 +3,21 @@ metadata:
 
 sources:
   single_level:
-    description: "Met Office MOGREPS-G dataset on a single vertical level"
-    driver: met_office_datasets.datasources.MetOfficeDataSource
+    description: "Met Office MOGREPS-UK dataset on a single vertical level"
+    driver: intake_informaticslab.datasources.MetOfficeDataSource
     args:
       start_cycle: "{{ start_cycle }}"
       end_cycle: "{{ end_cycle }}"
-      cycle_frequency: "6H"
+      cycle_frequency: "1H"
       forecast_extent: "126H"
-      model: "mo-atmospheric-mogreps-g"
+      model: "mo-atmospheric-mogreps-uk"
       dimensions:
         [
           "forecast_reference_time",
           "forecast_period",
           "realization",
-          "latitude",
-          "longitude",
+          "projection_y_coordinate",
+          "projection_x_coordinate",
         ]
       diagnostics:
         [
@@ -48,23 +48,23 @@ sources:
         ]
       static_coords:
         realization:
-          data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+          data: [0, 1, 2]
           attrs: { "units": "1", "standard_name": "realization" }
-        longitude:
-          data: { "start": -179.85938, "stop": 179.85938, "num": 1280 }
-          attrs:
-            {
-              "axis": "x",
-              "units": "degrees_east",
-              "standard_name": "longitude",
-            }
-        latitude:
-          data: { "start": -89.90625, "stop": 89.90625, "num": 960 }
+        projection_y_coordinate:
+          data: { "start": -1036000, "stop": 902000, "num": 970 }
           attrs:
             {
               "axis": "y",
-              "units": "degrees_north",
-              "standard_name": "latitude",
+              "units": "m",
+              "standard_name": "projection_y_coordinate",
+            }
+        projection_x_coordinate:
+          data: { "start": -1158000, "stop": 924000, "num": 1042 }
+          attrs:
+            {
+              "axis": "x",
+              "units": "m",
+              "standard_name": "projection_x_coordinate",
             }
       storage_options:
         data_protocol: "abfs"
@@ -75,7 +75,7 @@ sources:
       start_cycle:
         description: The start time of the oldest model run
         type: str
-        default: "20201126T0600Z"
+        default: "20201126T0800Z"
       end_cycle:
         description: The start time of the most recent model run
         type: str

@@ -5,8 +5,8 @@ import pandas as pd
 from .utils import datetime_to_iso_str
 from io import BytesIO
 import datetime
-from met_office_datasets import __version__
-from met_office_datasets.datasources import MetOfficeDataSource
+from intake_informaticslab import __version__
+from intake_informaticslab.datasources import MetOfficeDataSource
 
 
 class TimeSeriesDatasource(MetOfficeDataSource):

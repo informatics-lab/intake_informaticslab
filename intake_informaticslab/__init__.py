@@ -11,7 +11,7 @@ import os
 
 import intake
 
-from .datasources import MetOfficeDataSource, MergedMetOfficeDataSource
+from .datasources import MetOfficeDataSource, MergedMetOfficeDataSource, LicenceNotExceptedError
 
 CATALOG_DIR = os.path.join(os.path.dirname(__file__), 'cats')
 
@@ -23,7 +23,7 @@ cat = intake.catalog.Catalog.from_dict(
     {
         'air_quality':aq_cat,
         'weather_forecasts':mogreps_cat,
-        'weather_timeseries_uk':ukv_2020_plus_cat
+        'weather_continuous_timeseries':ukv_2020_plus_cat
 
     }, name="Met Office Datasets")
 

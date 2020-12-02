@@ -4,7 +4,7 @@ metadata:
 sources:
   ukv_daily_timeseries:
     description: Met Office UKV (high resolution uk model) data from 01/01/20 to approx present, stitched into continues times series by using the shortest lead time from multiple model runs. Daily temporal resolution.
-    driver: met_office_datasets.datasources.aq_datasource.TimeSeriesDatasource
+    driver: intake_informaticslab.datasources.aq_datasource.TimeSeriesDatasource
     args:
       start_cycle: "{{ start_cycle }}"
       end_cycle: "{{ end_cycle }}"
@@ -75,7 +75,7 @@ sources:
 
   ukv_hourly_timeseries:
     description: Met Office UKV (high resolution uk model) data from 01/01/20 to approx present, stitched into continues times series by using the shortest lead time from multiple model runs. Hourly temporal resolution.
-    driver: met_office_datasets.datasources.aq_datasource.TimeSeriesDatasource
+    driver: intake_informaticslab.datasources.aq_datasource.TimeSeriesDatasource
     args:
       start_cycle: "{{ start_cycle }}"
       end_cycle: "{{ end_cycle }}"

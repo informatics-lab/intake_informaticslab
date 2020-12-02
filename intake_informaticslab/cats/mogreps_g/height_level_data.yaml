@@ -2,9 +2,9 @@ metadata:
   version: 1
 
 sources:
-  pressure_level:
-    description: "Met Office MOGREPS-G dataset on pressure levels"
-    driver: met_office_datasets.datasources.MetOfficeDataSource
+  height_level:
+    description: "Met Office MOGREPS-G dataset on height levels"
+    driver: intake_informaticslab.datasources.MetOfficeDataSource
     args:
       start_cycle: "{{ start_cycle }}"
       end_cycle: "{{ end_cycle }}"
@@ -16,18 +16,59 @@ sources:
           "forecast_reference_time",
           "forecast_period",
           "realization",
-          "pressure",
+          "height",
           "latitude",
           "longitude",
         ]
-      diagnostics: ["wet_bulb_potential_temperature_on_pressure_levels"]
+      diagnostics: ["temperature_on_height_levels"]
       static_coords:
         realization:
           data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
           attrs: { "units": "1", "standard_name": "realization" }
-        pressure:
-          data: [50000.0, 70000.0, 85000.0]
-          attrs: { "long_name": "pressure", "units": "Pa", "axis": "Z" }
+        height:
+          data:
+            [
+              5.0,
+              10.0,
+              20.0,
+              30.0,
+              50.0,
+              75.0,
+              100.0,
+              150.0,
+              200.0,
+              250.0,
+              300.0,
+              400.0,
+              500.0,
+              600.0,
+              700.0,
+              800.0,
+              1000.0,
+              1250.0,
+              1500.0,
+              1750.0,
+              2000.0,
+              2250.0,
+              2500.0,
+              2750.0,
+              3000.0,
+              3250.0,
+              3500.0,
+              3750.0,
+              4000.0,
+              4500.0,
+              5000.0,
+              5500.0,
+              6000.0,
+            ]
+          attrs:
+            {
+              "standard_name": "height",
+              "units": "m",
+              "positive": "up",
+              "axis": "Z",
+            }
         longitude:
           data: { "start": -179.85938, "stop": 179.85938, "num": 1280 }
           attrs:
@@ -49,6 +90,7 @@ sources:
         url_prefix: "models"
         account_name: "metdatasa"
         credential: "?si=metoffice_datasets_intake&sv=2019-12-12&sr=c&sig=NuOQZ2OWTeJS8Tw%2FPGp7UCT5%2B62iLYNEKLILUeCIFt0%3D"
+      license: "Creative Commons licence (https://creativecommons.org/licenses/by-nc-nd/4.0/)"
     parameters:
       start_cycle:
         description: The start time of the oldest model run

@@ -3,12 +3,18 @@ import datetime
 from intake.catalog.local import YAMLFilesCatalog
 from intake.source.base import Schema
 from intake_xarray.base import DataSourceMixin
-from met_office_datasets import __version__
+from intake_informaticslab import __version__
 
 from .dataset import MODataset
 from .utils import datetime_to_iso_str
 
 DATA_DELAY = 24 + 6  # num hours from current time that data is available
+
+
+class LicenceNotExceptedError(RuntimeError):
+    def __init__(self, licence) -> None:
+        message = f"Please acknowledge your acceptance of the '{licence}' with the keyword argument `licence_accepted=True`.' "
+        super().__init__(message)
 
 
 class MetOfficeDataSource(DataSourceMixin):
@@ -26,9 +32,17 @@ class MetOfficeDataSource(DataSourceMixin):
         diagnostics,
         static_coords,
         storage_options,
+        license=None,
         metadata=None,
+        **kwargs
     ):
         super().__init__(metadata=metadata)
+
+        if license:
+            licence_accepted = kwargs.pop('licence_accepted', False)
+            if not (str(licence_accepted).upper() == "TRUE"):
+                raise LicenceNotExceptedError(license)
+
         if end_cycle.lower() == "latest":
             end_cycle = datetime.datetime.utcnow() - datetime.timedelta(
                 hours=DATA_DELAY

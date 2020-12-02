@@ -4,7 +4,7 @@ metadata:
 sources:
   air_quality_hourly:
     description: Met Office Air Quality hourly dataset
-    driver: met_office_datasets.datasources.aq_datasource.MetOfficeAQDataSource
+    driver: intake_informaticslab.datasources.aq_datasource.MetOfficeAQDataSource
     args:
       start_cycle: "{{ start_cycle }}"
       end_cycle: "{{ end_cycle }}"
@@ -46,7 +46,7 @@ sources:
 
   air_quality_daily:
     description: Met Office Air Quality daily dataset
-    driver: met_office_datasets.datasources.aq_datasource.MetOfficeAQDataSource
+    driver: intake_informaticslab.datasources.aq_datasource.MetOfficeAQDataSource
     args:
       start_cycle: "{{ start_cycle }}"
       end_cycle: "{{ end_cycle }}"

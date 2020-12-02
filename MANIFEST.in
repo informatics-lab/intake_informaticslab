@@ -1,3 +1,3 @@
 include versioneer.py
-include met_office_datasets/_version.py
-recursive-include met_office_datasets/cats *.yaml
+include intake_informaticslab/_version.py
+recursive-include intake_informaticslab/cats *.yaml

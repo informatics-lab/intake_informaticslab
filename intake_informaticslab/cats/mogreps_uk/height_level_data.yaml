@@ -4,7 +4,7 @@ metadata:
 sources:
   height_level:
     description: "Met Office MOGREPS-UK dataset on height levels"
-    driver: met_office_datasets.datasources.MetOfficeDataSource
+    driver: intake_informaticslab.datasources.MetOfficeDataSource
     args:
       start_cycle: "{{ start_cycle }}"
       end_cycle: "{{ end_cycle }}"

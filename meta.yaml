@@ -47,7 +47,7 @@ test:
     - pytest
 
 about:
-  home: https://github.com/informatics-lab/met_office_datasets
+  home: https://github.com/informatics-lab/intake_informaticslab
   license: GPLv3
   license_family: GPL3
   license_file: LICENSE
