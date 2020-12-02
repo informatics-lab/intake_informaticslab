@@ -35,7 +35,7 @@ def test_init():
 
 
 def test_licence_not_accepted():
-    from intake_informaticslab import MetOfficeDataSource, LicenceNotExceptedError
+    from intake_informaticslab import MetOfficeDataSource, LicenseNotExceptedError
 
     error_raised = False
     license = "My Licence"
@@ -65,7 +65,7 @@ def test_licence_not_accepted():
             },
             license=license
         )
-    except LicenceNotExceptedError as e:
+    except LicenseNotExceptedError as e:
         assert license in str(e)
         error_raised = True
 
@@ -73,7 +73,7 @@ def test_licence_not_accepted():
 
 
 def test_licence_accepted():
-    from intake_informaticslab import MetOfficeDataSource, LicenceNotExceptedError
+    from intake_informaticslab import MetOfficeDataSource, LicenseNotExceptedError
 
     error_raised = False
     license = "My Licence"
@@ -104,14 +104,14 @@ def test_licence_accepted():
             license=license,
             licence_accepted=True
         )
-    except LicenceNotExceptedError as e:
+    except LicenseNotExceptedError as e:
         error_raised = True
 
     assert not error_raised
 
 
 def test_licence_accepted_wrong():
-    from intake_informaticslab import MetOfficeDataSource, LicenceNotExceptedError
+    from intake_informaticslab import MetOfficeDataSource, LicenseNotExceptedError
 
     error_raised = False
     license = "My Licence"
@@ -142,7 +142,7 @@ def test_licence_accepted_wrong():
             license=license,
             licence_accepted="No I Don't"
         )
-    except LicenceNotExceptedError as e:
+    except LicenseNotExceptedError as e:
         error_raised = True
 
     assert error_raised

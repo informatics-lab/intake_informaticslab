@@ -11,7 +11,7 @@ from .utils import datetime_to_iso_str
 DATA_DELAY = 24 + 6  # num hours from current time that data is available
 
 
-class LicenceNotExceptedError(RuntimeError):
+class LicenseNotExceptedError(RuntimeError):
     def __init__(self, licence) -> None:
         message = f"Please acknowledge your acceptance of the '{licence}' with the keyword argument `licence_accepted=True`.' "
         super().__init__(message)
@@ -41,7 +41,7 @@ class MetOfficeDataSource(DataSourceMixin):
         if license:
             licence_accepted = kwargs.pop('licence_accepted', False)
             if not (str(licence_accepted).upper() == "TRUE"):
-                raise LicenceNotExceptedError(license)
+                raise LicenseNotExceptedError(license)
 
         if end_cycle.lower() == "latest":
             end_cycle = datetime.datetime.utcnow() - datetime.timedelta(
