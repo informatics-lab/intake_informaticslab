@@ -34,11 +34,11 @@ def test_init():
     )
 
 
-def test_licence_not_accepted():
+def test_license_not_accepted():
     from intake_informaticslab import MetOfficeDataSource, LicenseNotExceptedError
 
     error_raised = False
-    license = "My Licence"
+    license = "My License"
     try:
         ds = MetOfficeDataSource(
             start_cycle="20200101T0000Z",
@@ -72,11 +72,11 @@ def test_licence_not_accepted():
     assert error_raised
 
 
-def test_licence_accepted():
+def test_license_accepted():
     from intake_informaticslab import MetOfficeDataSource, LicenseNotExceptedError
 
     error_raised = False
-    license = "My Licence"
+    license = "My License"
     try:
         ds = MetOfficeDataSource(
             start_cycle="20200101T0000Z",
@@ -102,7 +102,7 @@ def test_licence_accepted():
                 "url_prefix": "/tmp/",
             },
             license=license,
-            licence_accepted=True
+            license_accepted=True
         )
     except LicenseNotExceptedError as e:
         error_raised = True
@@ -110,11 +110,11 @@ def test_licence_accepted():
     assert not error_raised
 
 
-def test_licence_accepted_wrong():
+def test_license_accepted_wrong():
     from intake_informaticslab import MetOfficeDataSource, LicenseNotExceptedError
 
     error_raised = False
-    license = "My Licence"
+    license = "My License"
     try:
         ds = MetOfficeDataSource(
             start_cycle="20200101T0000Z",
@@ -140,7 +140,7 @@ def test_licence_accepted_wrong():
                 "url_prefix": "/tmp/",
             },
             license=license,
-            licence_accepted="No I Don't"
+            license_accepted="No I Don't"
         )
     except LicenseNotExceptedError as e:
         error_raised = True
