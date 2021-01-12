@@ -5,7 +5,7 @@ import numpy as np
 def test_from_cat():
     import intake
     import os
-    cat_path = os.path.join(os.path.dirname(__file__), "../intake_informaticslab/cats/ukv_timeseries.yaml")
+    cat_path = os.path.join(os.path.dirname(__file__), "../intake_informaticslab/cats/ukv_timeseries_cat.yaml")
     cat = intake.open_catalog(cat_path)
     ds = cat.ukv_daily_timeseries.read_chunked()
     assert isinstance(ds, Dataset)
