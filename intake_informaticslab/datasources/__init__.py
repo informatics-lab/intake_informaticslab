@@ -3,6 +3,7 @@ import datetime
 from intake.catalog.local import YAMLFilesCatalog
 from intake.source.base import Schema
 from intake_xarray.base import DataSourceMixin
+
 from intake_informaticslab import __version__
 
 from .dataset import MODataset
@@ -34,12 +35,12 @@ class MetOfficeDataSource(DataSourceMixin):
         storage_options,
         license=None,
         metadata=None,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(metadata=metadata)
 
         if license:
-            license_accepted = kwargs.pop('license_accepted', False)
+            license_accepted = kwargs.pop("license_accepted", False)
             if not (str(license_accepted).upper() == "TRUE"):
                 raise LicenseNotExceptedError(license)
 
@@ -72,7 +73,7 @@ class MetOfficeDataSource(DataSourceMixin):
             start_lead_time="0H",
             end_lead_time=self.forecast_extent,
             lead_time_freq="1H",
-            **self.storage_options
+            **self.storage_options,
         ).ds
 
     def _get_schema(self):

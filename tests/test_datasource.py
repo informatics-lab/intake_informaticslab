@@ -35,7 +35,8 @@ def test_init():
 
 
 def test_license_not_accepted():
-    from intake_informaticslab import MetOfficeDataSource, LicenseNotExceptedError
+    from intake_informaticslab import (LicenseNotExceptedError,
+                                       MetOfficeDataSource)
 
     error_raised = False
     license = "My License"
@@ -56,14 +57,18 @@ def test_license_not_accepted():
             diagnostics=["temperature_at_screen_level"],
             static_coords={
                 "realization": {"data": [0, 1, 2]},
-                "projection_y_coordinate": {"data": {"start": 100, "stop": 200, "num": 10}},
-                "projection_x_coordinate": {"data": {"start": 100, "stop": 200, "num": 10}},
+                "projection_y_coordinate": {
+                    "data": {"start": 100, "stop": 200, "num": 10}
+                },
+                "projection_x_coordinate": {
+                    "data": {"start": 100, "stop": 200, "num": 10}
+                },
             },
             storage_options={
                 "data_protocol": "file",
                 "url_prefix": "/tmp/",
             },
-            license=license
+            license=license,
         )
     except LicenseNotExceptedError as e:
         assert license in str(e)
@@ -73,7 +78,8 @@ def test_license_not_accepted():
 
 
 def test_license_accepted():
-    from intake_informaticslab import MetOfficeDataSource, LicenseNotExceptedError
+    from intake_informaticslab import (LicenseNotExceptedError,
+                                       MetOfficeDataSource)
 
     error_raised = False
     license = "My License"
@@ -94,15 +100,19 @@ def test_license_accepted():
             diagnostics=["temperature_at_screen_level"],
             static_coords={
                 "realization": {"data": [0, 1, 2]},
-                "projection_y_coordinate": {"data": {"start": 100, "stop": 200, "num": 10}},
-                "projection_x_coordinate": {"data": {"start": 100, "stop": 200, "num": 10}},
+                "projection_y_coordinate": {
+                    "data": {"start": 100, "stop": 200, "num": 10}
+                },
+                "projection_x_coordinate": {
+                    "data": {"start": 100, "stop": 200, "num": 10}
+                },
             },
             storage_options={
                 "data_protocol": "file",
                 "url_prefix": "/tmp/",
             },
             license=license,
-            license_accepted=True
+            license_accepted=True,
         )
     except LicenseNotExceptedError as e:
         error_raised = True
@@ -111,7 +121,8 @@ def test_license_accepted():
 
 
 def test_license_accepted_wrong():
-    from intake_informaticslab import MetOfficeDataSource, LicenseNotExceptedError
+    from intake_informaticslab import (LicenseNotExceptedError,
+                                       MetOfficeDataSource)
 
     error_raised = False
     license = "My License"
@@ -132,15 +143,19 @@ def test_license_accepted_wrong():
             diagnostics=["temperature_at_screen_level"],
             static_coords={
                 "realization": {"data": [0, 1, 2]},
-                "projection_y_coordinate": {"data": {"start": 100, "stop": 200, "num": 10}},
-                "projection_x_coordinate": {"data": {"start": 100, "stop": 200, "num": 10}},
+                "projection_y_coordinate": {
+                    "data": {"start": 100, "stop": 200, "num": 10}
+                },
+                "projection_x_coordinate": {
+                    "data": {"start": 100, "stop": 200, "num": 10}
+                },
             },
             storage_options={
                 "data_protocol": "file",
                 "url_prefix": "/tmp/",
             },
             license=license,
-            license_accepted="No I Don't"
+            license_accepted="No I Don't",
         )
     except LicenseNotExceptedError as e:
         error_raised = True

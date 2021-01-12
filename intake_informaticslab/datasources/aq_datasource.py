@@ -1,32 +1,38 @@
-from .dataset import MODataset
-import xarray as xr
+import datetime
+from io import BytesIO
+
 import numpy as np
 import pandas as pd
-from .utils import datetime_to_iso_str
-from io import BytesIO
-import datetime
+import xarray as xr
+
 from intake_informaticslab import __version__
 from intake_informaticslab.datasources import MetOfficeDataSource
+
+from .dataset import MODataset
+from .utils import datetime_to_iso_str
 
 
 class TimeSeriesDatasource(MetOfficeDataSource):
     name = "met_office_ukv_timeseries"
     version = __version__
 
-    def __init__(self,
-                 start_cycle,
-                 end_cycle,
-                 cycle_frequency,
-                 model,
-                 dimensions,
-                 diagnostics,
-                 static_coords,
-                 storage_options,
-                 metadata=None
-                 ):
+    def __init__(
+        self,
+        start_cycle,
+        end_cycle,
+        cycle_frequency,
+        model,
+        dimensions,
+        diagnostics,
+        static_coords,
+        storage_options,
+        metadata=None,
+    ):
 
-        if end_cycle.lower() == 'latest':
-            end_cycle = datetime_to_iso_str((datetime.datetime.now() - datetime.timedelta(hours=48)))
+        if end_cycle.lower() == "latest":
+            end_cycle = datetime_to_iso_str(
+                (datetime.datetime.now() - datetime.timedelta(hours=48))
+            )
 
         super().__init__(
             start_cycle=start_cycle,
@@ -38,7 +44,7 @@ class TimeSeriesDatasource(MetOfficeDataSource):
             static_coords=static_coords,
             diagnostics=diagnostics,
             storage_options=storage_options,
-            metadata=metadata
+            metadata=metadata,
         )
 
     def _open_dataset(self):
@@ -58,21 +64,24 @@ class MetOfficeAQDataSource(MetOfficeDataSource):
     name = "met_office_aq"
     version = __version__
 
-    def __init__(self,
-                 start_cycle,
-                 end_cycle,
-                 cycle_frequency,
-                 model,
-                 dimensions,
-                 diagnostics,
-                 static_coords,
-                 storage_options,
-                 aggregation=None,
-                 metadata=None
-                 ):
+    def __init__(
+        self,
+        start_cycle,
+        end_cycle,
+        cycle_frequency,
+        model,
+        dimensions,
+        diagnostics,
+        static_coords,
+        storage_options,
+        aggregation=None,
+        metadata=None,
+    ):
 
-        if end_cycle.lower() == 'latest':
-            end_cycle = datetime_to_iso_str((datetime.datetime.now() - datetime.timedelta(hours=48)))
+        if end_cycle.lower() == "latest":
+            end_cycle = datetime_to_iso_str(
+                (datetime.datetime.now() - datetime.timedelta(hours=48))
+            )
 
         self.aggregation = aggregation
 
@@ -86,7 +95,7 @@ class MetOfficeAQDataSource(MetOfficeDataSource):
             static_coords=static_coords,
             diagnostics=diagnostics,
             storage_options=storage_options,
-            metadata=metadata
+            metadata=metadata,
         )
 
     def _open_dataset(self):
@@ -99,12 +108,11 @@ class MetOfficeAQDataSource(MetOfficeDataSource):
             static_coords=self.static_coords,
             cycle_frequency=self.cycle_frequency,
             storage_options=self.storage_options,
-            aggregation=self.aggregation
+            aggregation=self.aggregation,
         ).ds
 
 
 class SingleTimeDataset(MODataset):
-
     def __init__(
         self,
         start_cycle,
@@ -115,7 +123,7 @@ class SingleTimeDataset(MODataset):
         static_coords,
         cycle_frequency,
         storage_options,
-        aggregation=None
+        aggregation=None,
     ):
 
         super().__init__(
@@ -129,42 +137,37 @@ class SingleTimeDataset(MODataset):
             start_lead_time=None,
             end_lead_time=None,
             lead_time_freq=None,
-            **storage_options)
+            **storage_options,
+        )
 
         self.aggregation = aggregation
 
-    @ property
+    @property
     def chunks(self):
         static_coords = self.static_coords
         chunks = {name: static_coords[name].shape[0] for name in static_coords.keys()}
-        assert self.cycle_freq in ['1H', '1D']
-        if self.cycle_freq == '1H':
+        assert self.cycle_freq in ["1H", "1D"]
+        if self.cycle_freq == "1H":
             time_chunks = 24
-        elif self.cycle_freq == '1D':
+        elif self.cycle_freq == "1D":
             time_chunks = 1
         else:
-            raise RuntimeError(f"Don't know how to deal with cycle_freq {cycle_freq} for chunking")
+            raise RuntimeError(
+                f"Don't know how to deal with cycle_freq {cycle_freq} for chunking"
+            )
 
-        chunks.update({'time': time_chunks})
+        chunks.update({"time": time_chunks})
         return chunks
 
     @staticmethod
     def _check_dims_coords(dims, static_coords, model):
         # two types of grid def, assume one based on presence of "grid_latitude" or not
         if "grid_latitude" in dims:
-            expected_coords = [
-                "grid_longitude",
-                "grid_latitude"
-            ]
+            expected_coords = ["grid_longitude", "grid_latitude"]
         else:
-            expected_coords = [
-                "projection_x_coordinate",
-                "projection_y_coordinate"
-            ]
+            expected_coords = ["projection_x_coordinate", "projection_y_coordinate"]
 
-        expected_dims = [
-            "time"
-        ] + expected_coords
+        expected_dims = ["time"] + expected_coords
 
         pair_dict = {
             "static_coords": (expected_coords, list(static_coords.keys())),
@@ -177,7 +180,7 @@ class SingleTimeDataset(MODataset):
             if not all(map(lambda var: var in passed_in, expected)):
                 raise ValueError(f"Expected to find all of {expected} in {var_type}")
 
-    @ property
+    @property
     def dynamic_coords(self):
         dynamic_coords_data = {
             "time": pd.date_range(
@@ -195,9 +198,7 @@ class SingleTimeDataset(MODataset):
 
         time = pd.to_datetime(np.datetime64(time, "ns"))
 
-        url = self._get_blob_url(
-            diagnostic=diag, time=time
-        )
+        url = self._get_blob_url(diagnostic=diag, time=time)
 
         try:
             data = self._read_from_url(url)
@@ -207,7 +208,7 @@ class SingleTimeDataset(MODataset):
         except FileNotFoundError:
             return None
 
-    @ staticmethod
+    @staticmethod
     def _extract_data_as_dataarray(dataset):
         # coords in all datasets
         DIM_COORD_VARS = [
@@ -218,7 +219,7 @@ class SingleTimeDataset(MODataset):
             "forecast_day",
             "grid_longitude",
             "grid_latitude",
-            "forecast_period"
+            "forecast_period",
         ]
 
         # coords only in some datasets
@@ -232,11 +233,15 @@ class SingleTimeDataset(MODataset):
             "projection_x_coordinate_bnds",
             "transverse_mercator",
             "experiment_number",
-            "rotated_latitude_longitude"
+            "rotated_latitude_longitude",
         ]
 
         # vars that are not coords/dims but are optional
-        TIME_BOUND_VARS = ["time_bnds", "forecast_period_bnds", "forecast_reference_time_bnds"]
+        TIME_BOUND_VARS = [
+            "time_bnds",
+            "forecast_period_bnds",
+            "forecast_reference_time_bnds",
+        ]
 
         # also has 'depth_bnds' optionally..
         # need to figure out which variable is the data variable
@@ -256,40 +261,32 @@ class SingleTimeDataset(MODataset):
 
 
 class TimeSeriesDataset(SingleTimeDataset):
-
-    def _get_blob_url(
-        self, diagnostic, time=None
-    ):
+    def _get_blob_url(self, diagnostic, time=None):
         """Return the URL of a forecast file."""
 
         # convert all to strings
-        if self.cycle_freq == '1H':
-            frequency = 'hourly'
-        elif self.cycle_freq == '1D':
-            frequency = 'daily'
+        if self.cycle_freq == "1H":
+            frequency = "hourly"
+        elif self.cycle_freq == "1D":
+            frequency = "daily"
         else:
-            raise RuntimeError(f"Don't know how to deal with cycle_freq {cycle_freq} for chunking")
+            raise RuntimeError(
+                f"Don't know how to deal with cycle_freq {cycle_freq} for chunking"
+            )
 
-        time_str = datetime_to_iso_str(time).split('T')[0]
-        obj_path = (
-            f"metoffice_{self.model}_{frequency}/{diagnostic}/{self.model}_{frequency}_{diagnostic}_{time_str}.nc"
-        )
+        time_str = datetime_to_iso_str(time).split("T")[0]
+        obj_path = f"metoffice_{self.model}_{frequency}/{diagnostic}/{self.model}_{frequency}_{diagnostic}_{time_str}.nc"
         obj_path = f"{self.url_prefix}/{obj_path}"
         return f"{self.data_protocol}://{obj_path}"
 
 
 class AQDataset(SingleTimeDataset):
-
-    def _get_blob_url(
-        self, diagnostic, time=None
-    ):
+    def _get_blob_url(self, diagnostic, time=None):
         """Return the URL of a forecast file."""
 
         # convert all to strings
-        time_str = datetime_to_iso_str(time).split('T')[0]
+        time_str = datetime_to_iso_str(time).split("T")[0]
         ag_str = f"_{self.aggregation}" if self.aggregation else ""
-        obj_path = (
-            f"metoffice_{self.model}/{diagnostic}/{self.model}_{diagnostic}{ag_str}_{time_str}.nc"
-        )
+        obj_path = f"metoffice_{self.model}/{diagnostic}/{self.model}_{diagnostic}{ag_str}_{time_str}.nc"
         obj_path = f"{self.url_prefix}/{obj_path}"
         return f"{self.data_protocol}://{obj_path}"

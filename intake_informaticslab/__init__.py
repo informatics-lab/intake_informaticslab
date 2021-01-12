@@ -11,7 +11,8 @@ import os
 
 import intake
 
-from .datasources import MetOfficeDataSource, MergedMetOfficeDataSource, LicenseNotExceptedError
+from .datasources import (LicenseNotExceptedError, MergedMetOfficeDataSource,
+                          MetOfficeDataSource)
 
 CATALOG_DIR = os.path.join(os.path.dirname(__file__), 'cats')
 
