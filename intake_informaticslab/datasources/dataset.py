@@ -1,16 +1,15 @@
-from .utils import (
-    calc_cycle_validity_lead_times,
-    datetime_to_iso_str,
-    timedelta_to_duration_str,
-)
-from ..zarrhypothetic.zarrhypothetic import HypotheticZarrStore
+import logging
 from io import BytesIO
 
 import fsspec
 import numpy as np
 import pandas as pd
 import xarray as xr
-import logging
+
+from ..zarrhypothetic.zarrhypothetic import HypotheticZarrStore
+from .utils import (calc_cycle_validity_lead_times, datetime_to_iso_str,
+                    timedelta_to_duration_str)
+
 logger = logging.getLogger(__name__)
 
 
@@ -68,7 +67,7 @@ class MODataset:
     @staticmethod
     def _check_dims_coords(dims, static_coords, model):
 
-        if 'projection_x_coordinate' in static_coords:
+        if "projection_x_coordinate" in static_coords:
             expected_coords = [
                 "projection_x_coordinate",
                 "projection_y_coordinate",
@@ -165,7 +164,7 @@ class MODataset:
 
         REQUIRED_COORD_VARS = []
 
-        if 'projection_x_coordinate' in self.static_coords:
+        if "projection_x_coordinate" in self.static_coords:
             x_name, y_name = ["projection_x_coordinate", "projection_y_coordinate"]
         else:
             x_name, y_name = ["longitude", "latitude"]
@@ -207,7 +206,9 @@ class MODataset:
 
         data_var = list(set(dataset.variables) - set(NON_DATA_VARS))
         if len(data_var) > 1:
-            raise RuntimeError(f"Expected to find only 1 data variable but got: {data_var}")
+            raise RuntimeError(
+                f"Expected to find only 1 data variable but got: {data_var}"
+            )
         data_var = data_var[0]
         return dataset[data_var]
 

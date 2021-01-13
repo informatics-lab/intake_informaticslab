@@ -3,6 +3,7 @@ import datetime
 from intake.catalog.local import YAMLFilesCatalog
 from intake.source.base import Schema
 from intake_xarray.base import DataSourceMixin
+
 from intake_informaticslab import __version__
 
 from .dataset import MODataset
@@ -12,8 +13,8 @@ DATA_DELAY = 24 + 6  # num hours from current time that data is available
 
 
 class LicenseNotExceptedError(RuntimeError):
-    def __init__(self, licence) -> None:
-        message = f"Please acknowledge your acceptance of the '{licence}' with the keyword argument `licence_accepted=True`.' "
+    def __init__(self, license) -> None:
+        message = f"Please acknowledge your acceptance of the '{license}' with the keyword argument `license_accepted=True`.' "
         super().__init__(message)
 
 
@@ -34,13 +35,13 @@ class MetOfficeDataSource(DataSourceMixin):
         storage_options,
         license=None,
         metadata=None,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(metadata=metadata)
 
         if license:
-            licence_accepted = kwargs.pop('licence_accepted', False)
-            if not (str(licence_accepted).upper() == "TRUE"):
+            license_accepted = kwargs.pop("license_accepted", False)
+            if not (str(license_accepted).upper() == "TRUE"):
                 raise LicenseNotExceptedError(license)
 
         if end_cycle.lower() == "latest":
@@ -72,7 +73,7 @@ class MetOfficeDataSource(DataSourceMixin):
             start_lead_time="0H",
             end_lead_time=self.forecast_extent,
             lead_time_freq="1H",
-            **self.storage_options
+            **self.storage_options,
         ).ds
 
     def _get_schema(self):
