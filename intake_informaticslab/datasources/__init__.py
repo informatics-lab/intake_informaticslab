@@ -39,10 +39,8 @@ class MetOfficeDataSource(DataSourceMixin):
     ):
         super().__init__(metadata=metadata)
 
-        if license:
-            license_accepted = kwargs.pop("license_accepted", False)
-            if not (str(license_accepted).upper() == "TRUE"):
-                raise LicenseNotExceptedError(license)
+        self.license = license
+        self.license_accepted = kwargs.get("license_accepted", False)
 
         if end_cycle.lower() == "latest":
             end_cycle = datetime.datetime.utcnow() - datetime.timedelta(
@@ -62,6 +60,11 @@ class MetOfficeDataSource(DataSourceMixin):
         self._ds = None
 
     def _open_dataset(self):
+        if self.license:
+            license_accepted = self.license_accepted
+            if not (str(license_accepted).upper() == "TRUE"):
+                raise LicenseNotExceptedError(self.license)
+
         self._ds = MODataset(
             start_cycle=self.start_cycle,
             end_cycle=self.end_cycle,
@@ -105,6 +108,7 @@ class MergedMetOfficeDataSource(YAMLFilesCatalog):
     def __init__(self, path, flatten=True, **kwargs):
         metadata = kwargs.pop("metadata")
         super().__init__(path, flatten=flatten, metadata=metadata)
+
         self._kwargs = kwargs
         self._ds = None
 

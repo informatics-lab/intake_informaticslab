@@ -3,7 +3,7 @@ xarray
 intake-xarray
 conda-build
 fsspec
-adlfs=0.5.5 
+adlfs==0.5.5
 h5netcdf
 zarr
 matplotlib
