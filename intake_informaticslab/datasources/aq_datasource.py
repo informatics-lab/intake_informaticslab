@@ -9,7 +9,7 @@ from intake_informaticslab import __version__
 from intake_informaticslab.datasources import MetOfficeDataSource
 
 from .dataset import MODataset
-from .utils import datetime_to_iso_str
+from .utils import datetime_to_iso_str, remove_trailing_z
 
 
 class TimeSeriesDatasource(MetOfficeDataSource):
@@ -18,9 +18,9 @@ class TimeSeriesDatasource(MetOfficeDataSource):
 
     def __init__(
         self,
-        start_cycle,
-        end_cycle,
-        cycle_frequency,
+        start_datetime,
+        end_datetime,
+        timestep,
         model,
         dimensions,
         diagnostics,
@@ -30,15 +30,18 @@ class TimeSeriesDatasource(MetOfficeDataSource):
         metadata=None,
     ):
 
-        if end_cycle.lower() == "latest":
-            end_cycle = datetime_to_iso_str(
+        if end_datetime.lower() == "latest":
+            end_datetime = datetime_to_iso_str(
                 (datetime.datetime.now() - datetime.timedelta(hours=48))
             )
+        self.timestep = timestep
+        self.start_datetime = start_datetime
+        self.end_datetime = end_datetime
 
         super().__init__(
-            start_cycle=start_cycle,
-            end_cycle=end_cycle,
-            cycle_frequency=cycle_frequency,
+            start_cycle=start_datetime,
+            end_cycle=end_datetime,
+            cycle_frequency=timestep,
             forecast_extent=None,
             model=model,
             dimensions=dimensions,
@@ -51,13 +54,13 @@ class TimeSeriesDatasource(MetOfficeDataSource):
 
     def _open_dataset(self):
         self._ds = TimeSeriesDataset(
-            start_cycle=self.start_cycle,
-            end_cycle=self.end_cycle,
+            start_datetime=self.start_datetime,
+            end_datetime=self.end_datetime,
             model=self.model,
             dims=self.dimensions,
             diagnostics=self.diagnostics,
             static_coords=self.static_coords,
-            cycle_frequency=self.cycle_frequency,
+            timestep=self.timestep,
             storage_options=self.storage_options,
         ).ds
 
@@ -68,9 +71,9 @@ class MetOfficeAQDataSource(MetOfficeDataSource):
 
     def __init__(
         self,
-        start_cycle,
-        end_cycle,
-        cycle_frequency,
+        start_datetime,
+        end_datetime,
+        timestep,
         model,
         dimensions,
         diagnostics,
@@ -81,17 +84,20 @@ class MetOfficeAQDataSource(MetOfficeDataSource):
         metadata=None,
     ):
 
-        if end_cycle.lower() == "latest":
-            end_cycle = datetime_to_iso_str(
+        if end_datetime.lower() == "latest":
+            end_datetime = datetime_to_iso_str(
                 (datetime.datetime.now() - datetime.timedelta(hours=48))
             )
 
         self.aggregation = aggregation
+        self.start_datetime = start_datetime
+        self.end_datetime = end_datetime
+        self.timestep = timestep
 
         super().__init__(
-            start_cycle=start_cycle,
-            end_cycle=end_cycle,
-            cycle_frequency=cycle_frequency,
+            start_cycle=start_datetime,
+            end_cycle=end_datetime,
+            cycle_frequency=timestep,
             forecast_extent=None,
             model=model,
             dimensions=dimensions,
@@ -104,13 +110,13 @@ class MetOfficeAQDataSource(MetOfficeDataSource):
 
     def _open_dataset(self):
         self._ds = AQDataset(
-            start_cycle=self.start_cycle,
-            end_cycle=self.end_cycle,
+            start_datetime=self.start_datetime,
+            end_datetime=self.end_datetime,
             model=self.model,
             dims=self.dimensions,
             diagnostics=self.diagnostics,
             static_coords=self.static_coords,
-            cycle_frequency=self.cycle_frequency,
+            timestep=self.timestep,
             storage_options=self.storage_options,
             aggregation=self.aggregation,
         ).ds
@@ -119,45 +125,49 @@ class MetOfficeAQDataSource(MetOfficeDataSource):
 class SingleTimeDataset(MODataset):
     def __init__(
         self,
-        start_cycle,
-        end_cycle,
+        start_datetime,
+        end_datetime,
         model,
         dims,
         diagnostics,
         static_coords,
-        cycle_frequency,
+        timestep,
         storage_options,
         aggregation=None,
     ):
 
+        # remove the 'Z' from the start/end points or xarray struggles...
+        self.start_datetime = remove_trailing_z(start_datetime)
+        self.end_datetime = remove_trailing_z(end_datetime)
+        self.timestep = timestep
+        self.aggregation = aggregation
+
         super().__init__(
-            start_cycle=start_cycle,
-            end_cycle=end_cycle,
+            start_cycle=self.start_datetime,
+            end_cycle=self.end_datetime,
             model=model,
             dims=dims,
             diagnostics=diagnostics,
             static_coords=static_coords,
-            cycle_freq=cycle_frequency,
+            cycle_freq=timestep,
             start_lead_time=None,
             end_lead_time=None,
             lead_time_freq=None,
             **storage_options,
         )
 
-        self.aggregation = aggregation
-
     @property
     def chunks(self):
         static_coords = self.static_coords
         chunks = {name: static_coords[name].shape[0] for name in static_coords.keys()}
-        assert self.cycle_freq in ["1H", "1D"]
-        if self.cycle_freq == "1H":
+        assert self.timestep in ["1H", "1D"]
+        if self.timestep == "1H":
             time_chunks = 24
-        elif self.cycle_freq == "1D":
+        elif self.timestep == "1D":
             time_chunks = 1
         else:
             raise RuntimeError(
-                f"Don't know how to deal with cycle_freq {cycle_freq} for chunking"
+                f"Don't know how to deal with timestep {timestep} for chunking"
             )
 
         chunks.update({"time": time_chunks})
@@ -188,7 +198,7 @@ class SingleTimeDataset(MODataset):
     def dynamic_coords(self):
         dynamic_coords_data = {
             "time": pd.date_range(
-                start=self.start_cycle, end=self.end_cycle, freq=self.cycle_freq
+                start=self.start_datetime, end=self.end_datetime, freq=self.timestep
             )
         }
         return {
@@ -269,13 +279,13 @@ class TimeSeriesDataset(SingleTimeDataset):
         """Return the URL of a forecast file."""
 
         # convert all to strings
-        if self.cycle_freq == "1H":
+        if self.timestep == "1H":
             frequency = "hourly"
-        elif self.cycle_freq == "1D":
+        elif self.timestep == "1D":
             frequency = "daily"
         else:
             raise RuntimeError(
-                f"Don't know how to deal with cycle_freq {cycle_freq} for chunking"
+                f"Don't know how to deal with timestep {timestep} for chunking"
             )
 
         time_str = datetime_to_iso_str(time).split("T")[0]

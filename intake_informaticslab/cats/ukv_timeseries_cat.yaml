@@ -6,9 +6,9 @@ sources:
     description: Met Office UKV (high resolution UK model) data from 2020-01-01 to approx present, stitched into a continuous times series by using the shortest available lead time from the most recent model run. Daily temporal resolution.
     driver: intake_informaticslab.datasources.aq_datasource.TimeSeriesDatasource
     args:
-      start_cycle: "{{ start_cycle }}"
-      end_cycle: "{{ end_cycle }}"
-      cycle_frequency: "1D"
+      start_datetime: "{{ start_datetime }}"
+      end_datetime: "{{ end_datetime }}"
+      timestep: "1D"
       model: "ukv"
       diagnostics:
         [
@@ -64,11 +64,11 @@ sources:
         account_name: "metdatasa"
         credential: "?si=mo_dataset_intake&sv=2019-12-12&sr=c&sig=hevIcg3TDxHZLB0OgcJha2mx9WnXPWoVM0CEOIOisjM%3D"
     parameters:
-      start_cycle:
+      start_datetime:
         description: The start time of the oldest model run
         type: str
         default: "20200101T0000Z"
-      end_cycle:
+      end_datetime:
         description: The start time of the most recent model run
         type: str
         default: "latest"
@@ -77,9 +77,9 @@ sources:
     description: Met Office UKV (high resolution UK model) data from 2020-01-01 to approx present, stitched into a continuous times series by using the shortest available lead time from the most recent model run. Hourly temporal resolution.
     driver: intake_informaticslab.datasources.aq_datasource.TimeSeriesDatasource
     args:
-      start_cycle: "{{ start_cycle }}"
-      end_cycle: "{{ end_cycle }}"
-      cycle_frequency: "1H"
+      start_datetime: "{{ start_datetime }}"
+      end_datetime: "{{ end_datetime }}"
+      timestep: "1H"
       model: "ukv"
       diagnostics:
         [
@@ -119,11 +119,11 @@ sources:
         credential: "?si=mo_dataset_intake&sv=2019-12-12&sr=c&sig=hevIcg3TDxHZLB0OgcJha2mx9WnXPWoVM0CEOIOisjM%3D"
       license: "Open Government License (http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/)"
     parameters:
-      start_cycle:
+      start_datetime:
         description: The start time of the oldest model run
         type: str
         default: "20200101T0000Z"
-      end_cycle:
+      end_datetime:
         description: The start time of the most recent model run
         type: str
         default: "latest"

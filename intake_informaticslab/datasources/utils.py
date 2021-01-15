@@ -27,3 +27,7 @@ def calc_cycle_validity_lead_times(cycle_time=None, validity_time=None, lead_tim
     elif not lead_time:
         lead_time = validity_time - cycle_time
     return cycle_time, validity_time, lead_time
+
+
+def remove_trailing_z(dt_str):
+    return dt_str[:-1] if dt_str.endswith("Z") else dt_str
