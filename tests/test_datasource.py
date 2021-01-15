@@ -27,16 +27,12 @@ def test_init():
             "projection_y_coordinate": {"data": {"start": 100, "stop": 200, "num": 10}},
             "projection_x_coordinate": {"data": {"start": 100, "stop": 200, "num": 10}},
         },
-        storage_options={
-            "data_protocol": "file",
-            "url_prefix": "/tmp/",
-        },
+        storage_options={"data_protocol": "file", "url_prefix": "/tmp/",},
     )
 
 
 def test_license_not_accepted():
-    from intake_informaticslab import (LicenseNotExceptedError,
-                                       MetOfficeDataSource)
+    from intake_informaticslab import LicenseNotExceptedError, MetOfficeDataSource
 
     error_raised = False
     license = "My License"
@@ -64,12 +60,10 @@ def test_license_not_accepted():
                     "data": {"start": 100, "stop": 200, "num": 10}
                 },
             },
-            storage_options={
-                "data_protocol": "file",
-                "url_prefix": "/tmp/",
-            },
+            storage_options={"data_protocol": "file", "url_prefix": "/tmp/",},
             license=license,
         )
+        ds.to_dask()
     except LicenseNotExceptedError as e:
         assert license in str(e)
         error_raised = True
@@ -78,8 +72,7 @@ def test_license_not_accepted():
 
 
 def test_license_accepted():
-    from intake_informaticslab import (LicenseNotExceptedError,
-                                       MetOfficeDataSource)
+    from intake_informaticslab import LicenseNotExceptedError, MetOfficeDataSource
 
     error_raised = False
     license = "My License"
@@ -107,13 +100,11 @@ def test_license_accepted():
                     "data": {"start": 100, "stop": 200, "num": 10}
                 },
             },
-            storage_options={
-                "data_protocol": "file",
-                "url_prefix": "/tmp/",
-            },
+            storage_options={"data_protocol": "file", "url_prefix": "/tmp/",},
             license=license,
             license_accepted=True,
         )
+        ds.to_dask()
     except LicenseNotExceptedError as e:
         error_raised = True
 
@@ -121,8 +112,7 @@ def test_license_accepted():
 
 
 def test_license_accepted_wrong():
-    from intake_informaticslab import (LicenseNotExceptedError,
-                                       MetOfficeDataSource)
+    from intake_informaticslab import LicenseNotExceptedError, MetOfficeDataSource
 
     error_raised = False
     license = "My License"
@@ -150,13 +140,11 @@ def test_license_accepted_wrong():
                     "data": {"start": 100, "stop": 200, "num": 10}
                 },
             },
-            storage_options={
-                "data_protocol": "file",
-                "url_prefix": "/tmp/",
-            },
+            storage_options={"data_protocol": "file", "url_prefix": "/tmp/",},
             license=license,
             license_accepted="No I Don't",
         )
+        ds.to_dask()
     except LicenseNotExceptedError as e:
         error_raised = True
 
@@ -186,10 +174,7 @@ def test_get_some_data():
             "projection_y_coordinate": {"data": {"start": 100, "stop": 200, "num": 10}},
             "projection_x_coordinate": {"data": {"start": 100, "stop": 200, "num": 10}},
         },
-        storage_options={
-            "data_protocol": "file",
-            "url_prefix": "/tmp/",
-        },
+        storage_options={"data_protocol": "file", "url_prefix": "/tmp/",},
     )
     data = ds.read_chunked()
     assert isinstance(data, xr.Dataset) == True

@@ -28,22 +28,20 @@ setup(
         "Natural Language :: English",
     ],
     packages=find_packages(),
-    install_requires=["numpy>=1.11",
-                      'dask>=1.0',
-                      'xarray',
-                      'zarr>=2',
-                      'adlfs=0.5.5',
-                      'h5netcdf>=0.8',
-                      'intake',
-                      'intake-xarray',
-                      'toolz'],
+    install_requires=[
+        "numpy>=1.11",
+        "dask>=1.0",
+        "xarray",
+        "zarr>=2",
+        "adlfs==0.5.5",
+        "h5netcdf>=0.8",
+        "intake",
+        "intake-xarray",
+        "toolz",
+    ],
     zip_safe=True,
     long_description=long_description,
     long_description_content_type="text/markdown",
     include_package_data=True,
-    entry_points={
-        'intake.catalogs': [
-            f'met_office= {NAME}:cat',
-        ]
-    }
+    entry_points={"intake.catalogs": [f"met_office= {NAME}:cat",]},
 )

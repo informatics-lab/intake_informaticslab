@@ -26,6 +26,7 @@ class TimeSeriesDatasource(MetOfficeDataSource):
         diagnostics,
         static_coords,
         storage_options,
+        license=None,
         metadata=None,
     ):
 
@@ -44,6 +45,7 @@ class TimeSeriesDatasource(MetOfficeDataSource):
             static_coords=static_coords,
             diagnostics=diagnostics,
             storage_options=storage_options,
+            license=None,
             metadata=metadata,
         )
 
@@ -75,6 +77,7 @@ class MetOfficeAQDataSource(MetOfficeDataSource):
         static_coords,
         storage_options,
         aggregation=None,
+        license=None,
         metadata=None,
     ):
 
@@ -95,6 +98,7 @@ class MetOfficeAQDataSource(MetOfficeDataSource):
             static_coords=static_coords,
             diagnostics=diagnostics,
             storage_options=storage_options,
+            license=license,
             metadata=metadata,
         )
 
