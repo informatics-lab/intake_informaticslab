@@ -5,10 +5,13 @@ import fsspec
 import numpy as np
 import pandas as pd
 import xarray as xr
-
 from ..zarrhypothetic.zarrhypothetic import HypotheticZarrStore
-from .utils import (calc_cycle_validity_lead_times, datetime_to_iso_str,
-                    timedelta_to_duration_str)
+from .utils import (
+    calc_cycle_validity_lead_times,
+    datetime_to_iso_str,
+    timedelta_to_duration_str,
+    remove_trailing_z,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -55,9 +58,6 @@ class MODataset:
         self._validate_storage_options()
 
         # remove the 'Z' from the start/end points or xarray struggles...
-        remove_trailing_z = (
-            lambda dt_str: dt_str[:-1] if dt_str.endswith("Z") else dt_str
-        )
         self.start_cycle = remove_trailing_z(self.start_cycle)
         self.end_cycle = remove_trailing_z(self.end_cycle)
 

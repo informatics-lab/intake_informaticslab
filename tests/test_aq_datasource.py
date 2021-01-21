@@ -14,11 +14,11 @@ def test_init():
     from intake_informaticslab.datasources.aq_datasource import AQDataset
 
     ds = AQDataset(
-        start_cycle="20200101T0000Z",
-        end_cycle="20201108T0000Z",
+        start_datetime="20200101T0000Z",
+        end_datetime="20201108T0000Z",
         diagnostics=["o3", "no2", "pm10", "pm2p5", "so2"],
         model="aqum_hourly",
-        cycle_frequency="1H",
+        timestep="1H",
         dims=["time", "projection_y_coordinate", "projection_x_coordinate"],
         static_coords={
             "projection_y_coordinate": {
@@ -56,7 +56,7 @@ def test_from_cat():
         os.path.dirname(__file__), "../intake_informaticslab/cats/air_quality_cat.yaml"
     )
     cat = intake.open_catalog(cat_path)
-    ds = cat.air_quality_hourly.read_chunked()
+    ds = cat.air_quality_hourly.to_dask()
     assert isinstance(ds, Dataset)
     assert len(ds.data_vars) == 5
     for var in ds.data_vars:
