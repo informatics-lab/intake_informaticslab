@@ -1,0 +1,7 @@
+channels:
+  - informaticslab intake_informaticslab
+  - conda-forge
+  - defaults
+dependencies:
+  - informaticslab=0.0.17
+  - matplotlib
