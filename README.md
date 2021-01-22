@@ -59,7 +59,7 @@ Data or any derivatives made using the data are for internal use only and may no
 ### Examples
 See the `binder` folder for example Notebooks. 
 
-These example can run as a [MyBinder instance](https://mybinder.org/v2/gh/informatics-lab/met_office_datasets/HEAD?urlpath=%2Flab%2Ftree%2binder%2FIntroduction.ipynb) but will run better on a dedicated instance close to the data (Azure East US 2 region).
+These example can run as a [MyBinder instance](https://mybinder.org/v2/gh/informatics-lab/met_office_datasets/HEAD?urlpath=%2Flab%2Ftree%2Fbinder%2FIntroduction.ipynb) but will run better on a dedicated instance close to the data (Azure East US 2 region).
 
 ## Installing
 
