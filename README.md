@@ -1,4 +1,3 @@
-[]
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/informatics-lab/met_office_datasets/HEAD?urlpath=%2Flab%2Ftree%2Fbinder%2FIntroduction.ipynb)
 
 
