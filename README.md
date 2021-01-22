@@ -1,3 +1,7 @@
+[]
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/informatics-lab/met_office_datasets/HEAD?urlpath=%2Flab%2Ftree%2Fbinder%2FIntroduction.ipynb)
+
+
 # Intake Informatics Lab
 
 Intake catalogues and associated drivers which provide access to hundreds of terabytes of Met Office data.
@@ -52,6 +56,10 @@ The data are free to use for non-commercial purposes under the terms of the lice
 You must ensure that you acknowledge the source of this data as prescribed by this licence.
 Data or any derivatives made using the data are for internal use only and may not be distributed or otherwise shared.
 
+### Examples
+See the `binder` folder for example Notebooks. 
+
+These example can run as a [MyBinder instance](https://mybinder.org/v2/gh/informatics-lab/met_office_datasets/HEAD?urlpath=%2Flab%2Ftree%2Fbinder%2FIntroduction.ipynb) but will run better on a dedicated instance close to the data (Azure East US 2 region).
 
 ## Installing
 
