@@ -33,7 +33,7 @@ setup(
         "dask>=1.0",
         "xarray",
         "zarr>=2",
-        "adlfs==0.5.5",
+        "adlfs>=0.5.9",
         "h5netcdf>=0.8",
         "intake",
         "intake-xarray",
